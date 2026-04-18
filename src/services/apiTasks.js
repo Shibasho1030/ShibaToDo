@@ -1,20 +1,20 @@
 const API_URL = "http://localhost:8000/tasks";
 
-export async function getTasks() {
+export async function getTasksApi() {
   const res = await fetch(`${API_URL}`);
   if (!res.ok) throw Error("タスクリストの取得に失敗しました");
   const data = await res.json();
   return data;
 }
 
-export async function getTask(id) {
+export async function getTaskApi(id) {
   const res = await fetch(`${API_URL}/${id}`);
   if (!res.ok) throw Error("タスクの取得に失敗しました");
   const data = await res.json();
   return data;
 }
 
-export async function createTask(newOrder) {
+export async function createTaskApi(newOrder) {
   try {
     const res = await fetch(`${API_URL}`, {
       method: "POST",
@@ -31,7 +31,7 @@ export async function createTask(newOrder) {
   }
 }
 
-export async function updateTask(id, updateObj) {
+export async function updateTaskApi(id, updateObj) {
   try {
     const res = await fetch(`${API_URL}/${id}`, {
       method: "PATCH",
@@ -48,7 +48,7 @@ export async function updateTask(id, updateObj) {
   }
 }
 
-export async function deleteTask(id) {
+export async function deleteTaskApi(id) {
   try {
     const res = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
