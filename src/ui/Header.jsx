@@ -4,23 +4,26 @@ function Header() {
   return (
     <header className="border-b border-[#9DB2BF]/40 bg-[#9DB2BF]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-        <h1 className="text-lg font-semibold text-[#27374D] rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 font-semibold cursor-pointer">
+        <Link
+          to="/"
+          className="text-lg font-semibold text-[#27374D] rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 font-semibold cursor-pointer"
+        >
           ShibaToDo
-        </h1>
+        </Link>
 
         <nav className="flex gap-6 text-sm text-[#27374D]">
-          <a
-            href="#"
+          <Link
+            to="/tasks"
             className="rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 font-semibold cursor-pointer"
           >
             Tasks
-          </a>
-          <a
-            href="#"
+          </Link>
+          <Link
+            to="/"
             className="rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 font-semibold cursor-pointer"
           >
             Dashboard
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
