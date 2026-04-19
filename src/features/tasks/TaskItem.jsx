@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { updateTaskApi } from "../../services/apiTasks";
-import { updateTask } from "./tasksSlice";
+import { setEditingTaskId, updateTask } from "./tasksSlice";
+import { Link } from "react-router-dom";
 
 function TaskItem({ task }) {
   const { id, title, completed, priority, category, dueDate } = task;
@@ -16,18 +17,21 @@ function TaskItem({ task }) {
   async function handleToggle(e) {
     e.preventDefault();
     const toggledTask = { ...task, completed: !completed };
-    dispatch(updateTask(toggledTask));
     try {
       await updateTaskApi(id, { completed: toggledTask.completed });
+      dispatch(updateTask(toggledTask));
     } catch (err) {
       dispatch(updateTask(task));
       console.error(err.message);
     }
   }
 
+  function handleEditBtn() {
+    dispatch(setEditingTaskId(task.id));
+  }
+
   return (
     <li className="mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg">
-      {/* left */}
       <div className="flex min-w-0 items-center gap-3">
         <button
           onClick={handleToggle}
@@ -53,18 +57,17 @@ function TaskItem({ task }) {
         </div>
       </div>
 
-      {/* right */}
       <div className="ml-4 flex shrink-0 items-center gap-2 sm:gap-3">
         <span
           className={`cursor-pointer rounded-full px-2.5 py-1 inline-block text-[11px] font-medium ring-1 ${
             priorityStyle[priority]
-          }${completed ? " grayscale opacity-60 line-through" : ""} ${priority ? "" : "opacity-0"}`}
+          }${priority && completed ? " grayscale opacity-60 line-through" : ""} ${priority ? "" : "opacity-0"}`}
         >
           {priority ? priority : ""}
         </span>
         <span
-          className={`cursor-pointer hidden rounded-full min-w-15 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
-            ${completed ? " grayscale opacity-60 line-through" : ""}`}
+          className={`cursor-pointer hidden rounded-full min-w-13 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
+            ${category && completed ? " grayscale opacity-60 line-through" : ""} ${category ? "" : "opacity-0"}`}
         >
           {category ? category : ""}
         </span>
@@ -75,13 +78,15 @@ function TaskItem({ task }) {
           {dueDate ? new Date(dueDate).toLocaleDateString("ja-JP") : ""}
         </span>
 
-        <div className="flex items-center gap-1 opacity-0 transition group-hover:opacity-100">
-          <button
-            type="button"
-            className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition lg:hover:bg-stone-100 lg:hover:text-stone-800 cursor-pointer"
+        <div className="flex items-center gap-1 lg:opacity-0 transition group-hover:opacity-100">
+          <Link
+            to="/tasks/form"
+            className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition 
+            lg:hover:bg-stone-100 lg:hover:text-stone-800 cursor-pointer "
+            onClick={handleEditBtn}
           >
             Edit
-          </button>
+          </Link>
           <button
             type="button"
             className="rounded-lg px-2 py-1 text-xs font-medium text-rose-500 transition hover:bg-rose-50 hover:text-rose-700 cursor-pointer"

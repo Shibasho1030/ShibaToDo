@@ -4,10 +4,10 @@ import Header from "./Header";
 
 function AppLayout() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="mx-auto w-full max-w-3xl flex-1 p-6 min-h-screen bg-[#DDE6ED]">
+      <main className="mx-auto w-full max-w-3xl flex-1 p-6  bg-[#DDE6ED]">
         <Outlet />
       </main>
 
