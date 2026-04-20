@@ -1,15 +1,10 @@
 const initialState = {
   tasks: [],
-  currentUserId: null,
   editingTaskId: null,
 };
 
-export default function taskReducer(state = initialState, action) {
+export default function tasksReducer(state = initialState, action) {
   switch (action.type) {
-    case "/":
-      return {
-        ...state,
-      };
     case "tasks/createTask":
       return {
         ...state,
