@@ -1,10 +1,11 @@
 import { useDispatch } from "react-redux";
 import { updateTaskApi } from "../../services/apiTasks";
 import { setEditingTaskId, updateTask } from "./tasksSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function TaskItem({ task }) {
-  const { id, title, completed, priority, category, dueDate } = task;
+  const { id, title, completed, priority, dueDate } = task;
+  const navigate = useNavigate();
 
   const priorityStyle = {
     low: "bg-sky-500/10 text-sky-600 ring-sky-500/20",
@@ -17,9 +18,9 @@ function TaskItem({ task }) {
   async function handleToggle(e) {
     e.preventDefault();
     const toggledTask = { ...task, completed: !completed };
+    dispatch(updateTask(toggledTask));
     try {
       await updateTaskApi(id, { completed: toggledTask.completed });
-      dispatch(updateTask(toggledTask));
     } catch (err) {
       dispatch(updateTask(task));
       console.error(err.message);
@@ -31,19 +32,22 @@ function TaskItem({ task }) {
   }
 
   return (
-    <li className="mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg">
+    <li
+      onDoubleClick={() => navigate(`/tasks/${task.id}`)}
+      className="mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg"
+    >
       <div className="flex min-w-0 items-center gap-3">
         <button
           onClick={handleToggle}
           type="button"
-          className={`cursor-pointer flex h-5 min-w-5 items-center justify-center rounded-full border transition ${
+          className={`cursor-pointer flex h-5 min-w-5 items-center justify-center rounded-full border  ${
             completed
               ? "border-[#27374D] bg-[#27374D] text-[#DDE6ED]"
               : "border-stone-300 bg-white text-transparent hover:border-[#526D82]"
           }`}
           aria-label="toggle task"
         >
-          {completed ? "✓" : ""}
+          ✓
         </button>
 
         <div className="min-w-0">
@@ -63,14 +67,25 @@ function TaskItem({ task }) {
             priorityStyle[priority]
           }${priority && completed ? " grayscale opacity-60 line-through" : ""} ${priority ? "" : "opacity-0"}`}
         >
-          {priority ? priority : ""}
+          {priority === "high" && "high"}
+          {priority === "medium" && "med"}
+          {priority === "low" && "low"}
         </span>
-        <span
-          className={`cursor-pointer hidden rounded-full min-w-13 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
+        {/* <span
+          className={`cursor-pointer hidden rounded-full min-w-16 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
             ${category && completed ? " grayscale opacity-60 line-through" : ""} ${category ? "" : "opacity-0"}`}
         >
-          {category ? category : ""}
-        </span>
+          {category === "study" && "学習"}
+          {category === "work" && "仕事"}
+          {category === "personal" && "個人"}
+          {category === "health" && "健康"}
+          {category === "shopping" && "買い物"}
+          {category === "finance" && "お金"}
+          {category === "exercise" && "運動"}
+          {category === "family" && "家族"}
+          {category === "hobby" && "趣味"}
+          {category === "other" && "その他"}
+        </span> */}
 
         <span
           className={`hidden text-xs min-w-15 text-stone-500 md:inline-block h-4 ${completed ? " grayscale opacity-60 line-through" : ""}`}
@@ -82,7 +97,7 @@ function TaskItem({ task }) {
           <Link
             to="/tasks/form"
             className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition 
-            lg:hover:bg-stone-100 lg:hover:text-stone-800 cursor-pointer "
+            hover:bg-stone-100 hover:text-stone-800 cursor-pointer "
             onClick={handleEditBtn}
           >
             Edit

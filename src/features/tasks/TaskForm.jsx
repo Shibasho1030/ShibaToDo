@@ -3,9 +3,12 @@ import { createTaskApi, updateTaskApi } from "../../services/apiTasks";
 import Button from "../../ui/Button";
 import { createTask, finishEdit, updateTask } from "./tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "react-router-dom";
 
 function TaskForm() {
   const { tasks, editingTaskId } = useSelector((state) => state.tasks);
+  const navigation = useNavigation();
+  const isSubmitting = navigation === "submitting";
 
   const editingTask = tasks.find((task) => editingTaskId === task.id);
   const initialFormData = {
@@ -62,6 +65,7 @@ function TaskForm() {
             タイトル
           </label>
           <input
+            required
             type="text"
             placeholder="例: Reactの課題を進める"
             value={formData.title}
@@ -107,32 +111,6 @@ function TaskForm() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-[#27374D]">
-              カテゴリ
-            </label>
-            <select
-              value={formData.category}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
-              }
-              className="w-full rounded-2xl border border-[#9DB2BF] bg-[#F8FBFD] px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
-            >
-              <option value="study">学習</option>
-              <option value="work">仕事</option>
-              <option value="personal">個人</option>
-              <option value="health">健康</option>
-              <option value="shopping">買い物</option>
-              <option value="finance">お金</option>
-              <option value="exercise">運動</option>
-              <option value="family">家族</option>
-              <option value="hobby">趣味</option>
-              <option value="other">その他</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#27374D]">
               期限
             </label>
             <input
@@ -144,7 +122,9 @@ function TaskForm() {
               className="w-full rounded-2xl border border-[#9DB2BF] bg-[#F8FBFD] px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
             />
           </div>
+        </div>
 
+        <div className="grid gap-4 sm:grid-cols-2">
           {editingTaskId && (
             <div>
               <label className="mb-2 block text-sm font-medium text-[#27374D]">
@@ -165,11 +145,36 @@ function TaskForm() {
               </select>
             </div>
           )}
+          {/* <div> 見ずらくなるためカテゴリは削除
+            <label className="mb-2 block text-sm font-medium text-[#27374D]">
+              カテゴリ
+            </label>
+            <select
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+              className="w-full rounded-2xl border border-[#9DB2BF] bg-[#F8FBFD] px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
+            >
+              <option value="study">学習</option>
+              <option value="work">仕事</option>
+              <option value="personal">個人</option>
+              <option value="health">健康</option>
+              <option value="shopping">買い物</option>
+              <option value="finance">お金</option>
+              <option value="exercise">運動</option>
+              <option value="family">家族</option>
+              <option value="hobby">趣味</option>
+              <option value="other">その他</option>
+            </select>
+          </div> */}
         </div>
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-2">
-        <Button type="submit">{editingTaskId ? "更新する" : "追加する"}</Button>
+        <Button type="submit">
+          {isSubmitting ? "送信中..." : editingTaskId ? "更新する" : "追加する"}
+        </Button>
       </div>
     </form>
   );

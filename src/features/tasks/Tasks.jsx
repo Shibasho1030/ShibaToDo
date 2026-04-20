@@ -33,13 +33,13 @@ function Tasks() {
 
         <div className="ml-4 flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="inline-block min-w-15 text-center">優先度</span>
-          <span className="hidden min-w-10 text-center sm:inline-block">
+          {/* <span className="hidden min-w-10 text-center sm:inline-block">
             カテゴリ
-          </span>
-          <span className="hidden min-w-15 text-center md:inline-block">
+          </span> */}
+          <span className="hidden min-w-11 text-center md:inline-block ">
             期限
           </span>
-          <span className="min-w-25 text-center">操作</span>
+          <span className="min-w-21 text-center md:min-w-25">操作</span>
         </div>
       </div>
       <ul>

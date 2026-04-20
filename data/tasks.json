@@ -3,12 +3,14 @@
     {
       "id": "1",
       "name": "Shiba",
-      "email": "shiba@example.com"
+      "email": "shiba@example.com",
+      "password": "shibasho"
     },
     {
       "id": "2",
       "name": "Tanaka",
-      "email": "tanaka@example.com"
+      "email": "tanaka@example.com",
+      "password": "tanaka"
     }
   ],
   "tasks": [
