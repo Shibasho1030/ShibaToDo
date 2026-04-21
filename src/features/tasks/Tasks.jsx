@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router-dom";
 import { getTasksApi } from "../../services/apiTasks";
 import TaskItem from "./TaskItem";
 import LinkButton from "../../ui/LinkButton";
@@ -7,17 +6,28 @@ import { useEffect } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
 
+// タスク一覧を表示するUIコンポーネント
 function Tasks() {
-  const tasksData = useLoaderData();
+  // const tasksData = useLoaderData();
   const dispatch = useDispatch();
+  const { currentUserId } = useSelector((state) => state.users);
   const { tasks } = useSelector((state) => state.tasks);
 
   useEffect(
     function () {
-      dispatch(setTasks(tasksData));
+      async function setTasksDataFetch() {
+        try {
+          const tasksDataFromApi = await getTasksApi();
+          dispatch(setTasks(tasksDataFromApi));
+        } catch (err) {
+          console.error(err.message);
+        }
+      }
+      setTasksDataFetch();
     },
-    [tasksData, dispatch],
+    [dispatch],
   );
+  const filteredTasks = tasks.filter((task) => task.userId === +currentUserId);
 
   return (
     <>
@@ -43,17 +53,20 @@ function Tasks() {
         </div>
       </div>
       <ul>
-        {(tasks.length > 0 ? tasks : tasksData).map((task) => (
-          <TaskItem task={task} key={task.id} />
-        ))}
+        {filteredTasks.map((task) => {
+          // console.log(task.userId, currentUserId);
+          return <TaskItem task={task} key={task.id} />;
+        })}
       </ul>
     </>
   );
 }
 
-export async function loader() {
-  const tasksData = await getTasksApi();
-  return tasksData;
-}
+// JSONファイル(DB)からタスク一覧を取得するReact Routerローダー関数、トグルボタンの起動によりLoader再実行、
+// Reduxのstate初期化によりログアウト状態となるためuseEffectでのtasks配列更新に変更
+// export async function loader() {
+//   const tasksData = await getTasksApi();
+//   return tasksData;
+// }
 
 export default Tasks;

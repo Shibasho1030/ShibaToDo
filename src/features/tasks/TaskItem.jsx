@@ -3,6 +3,7 @@ import { updateTaskApi } from "../../services/apiTasks";
 import { setEditingTaskId, updateTask } from "./tasksSlice";
 import { Link, useNavigate } from "react-router-dom";
 
+// 単一タスクを表示するためのUIコンポーネント
 function TaskItem({ task }) {
   const { id, title, completed, priority, dueDate } = task;
   const navigate = useNavigate();
@@ -12,15 +13,30 @@ function TaskItem({ task }) {
     medium: "bg-amber-500/10 text-amber-600 ring-amber-500/20",
     high: "bg-rose-500/10 text-rose-600 ring-rose-500/20",
   };
-
   const dispatch = useDispatch();
 
   async function handleToggle(e) {
     e.preventDefault();
     const toggledTask = { ...task, completed: !completed };
-    dispatch(updateTask(toggledTask));
+
     try {
-      await updateTaskApi(id, { completed: toggledTask.completed });
+      dispatch(updateTask(toggledTask));
+      await updateTaskApi(id, toggledTask);
+      // const res = await fetch(`http://localhost:8000/tasks/${id}`, {
+      //   method: "PATCH",
+      //   body: JSON.stringify(toggledTask),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      // console.log("res.url =", res.url);
+      // console.log("res.status =", res.status);
+      // console.log("res.redirected =", res.redirected);
+      // if (!res.ok) {
+      //   const text = await res.text();
+      //   console.log("error body =", text);
+      //   throw Error("タスクの更新ができませんでした");
+      // }
     } catch (err) {
       dispatch(updateTask(task));
       console.error(err.message);
@@ -71,7 +87,7 @@ function TaskItem({ task }) {
           {priority === "medium" && "med"}
           {priority === "low" && "low"}
         </span>
-        {/* <span
+        {/* <span 見ずらくなるためカテゴリは削除
           className={`cursor-pointer hidden rounded-full min-w-16 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
             ${category && completed ? " grayscale opacity-60 line-through" : ""} ${category ? "" : "opacity-0"}`}
         >

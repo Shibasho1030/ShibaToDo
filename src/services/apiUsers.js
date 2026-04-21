@@ -1,3 +1,5 @@
+// JSONファイル(DB代替)との通信を行うユーザー関連のAPI関数
+
 const API_URL = "http://localhost:8000/users";
 
 export async function getUsersApi() {

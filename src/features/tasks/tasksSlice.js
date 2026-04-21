@@ -1,3 +1,5 @@
+// タスク関連の状態を管理するRedux Toolkit用のスライスファイル
+
 const initialState = {
   tasks: [],
   editingTaskId: null,
