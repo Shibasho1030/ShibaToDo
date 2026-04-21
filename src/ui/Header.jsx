@@ -1,11 +1,24 @@
-import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { logout } from "../features/accounts/accountsSlice";
 
 function Header() {
   const { isAuthenticated } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const isLoginPage =
-    pathname === "/users/login" || pathname === "/users/createAccount";
+  const isAuthPage =
+    pathname === "/users/login" ||
+    pathname === "/users/createAccount" ||
+    pathname === "/tasks" ||
+    pathname.startsWith("/tasks/") ||
+    pathname === "/tasks/form";
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    dispatch(logout());
+    localStorage.removeItem("currentUserId");
+    navigate("/");
+  }
 
   return (
     <header className="border-b border-[#9DB2BF]/40 bg-[#9DB2BF]/80 backdrop-blur-md">
@@ -26,7 +39,7 @@ function Header() {
               Tasks
             </Link>
           )}
-          {!isLoginPage && !isAuthenticated && (
+          {!isAuthPage && !isAuthenticated && (
             <>
               <Link
                 to="/users/createAccount"
@@ -41,6 +54,15 @@ function Header() {
                 Login
               </Link>
             </>
+          )}
+          {isAuthenticated && (
+            <button
+              type="button"
+              onClick={() => handleLogout()}
+              className="rounded-xl text-lg px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 font-semibold cursor-pointer"
+            >
+              Logout
+            </button>
           )}
         </nav>
       </div>

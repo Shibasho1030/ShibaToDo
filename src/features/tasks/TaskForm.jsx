@@ -5,6 +5,7 @@ import { createTask, finishEdit, updateTask } from "./tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "react-router-dom";
 
+// 新規作成または、編集中の場合は編集フォームのUIコンポーネント
 function TaskForm() {
   const { tasks, editingTaskId } = useSelector((state) => state.tasks);
   const navigation = useNavigation();
