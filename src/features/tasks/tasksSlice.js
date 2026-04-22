@@ -24,10 +24,16 @@ export default function tasksReducer(state = initialState, action) {
         ...state,
         tasks: action.payload,
       };
-    case "tasks/setEditingTaskId":
+    // 再リロードによりステート情報消失するため没
+    // case "tasks/setEditingTaskId":
+    //   return {
+    //     ...state,
+    //     editingTaskId: action.payload,
+    //   };
+    case "tasks/deleteTask":
       return {
         ...state,
-        editingTaskId: action.payload,
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
     case "tasks/finishEdit":
       return {
@@ -51,6 +57,9 @@ export function updateTask(updatedTask) {
 export function setTasks(updateTask) {
   return { type: "tasks/setTasks", payload: updateTask };
 }
-export function setEditingTaskId(taskId) {
-  return { type: "tasks/setEditingTaskId", payload: taskId };
+// export function setEditingTaskId(taskId) {
+//   return { type: "tasks/setEditingTaskId", payload: taskId };
+// }
+export function deleteTask(id) {
+  return { type: "tasks/deleteTask", payload: id };
 }

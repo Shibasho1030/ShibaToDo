@@ -43,6 +43,10 @@ const router = createBrowserRouter([
         element: <TaskForm />,
       },
       {
+        path: "/tasks/:id/form",
+        element: <TaskForm />,
+      },
+      {
         path: "/tasks/:id",
         element: <TaskShow />,
       },

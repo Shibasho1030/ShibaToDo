@@ -23,12 +23,20 @@ function Header() {
   return (
     <header className="border-b border-[#9DB2BF]/40 bg-[#9DB2BF]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-        <Link
-          to="/"
-          className="text-xl font-semibold text-[#27374D] rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 cursor-pointer"
-        >
-          ShibaToDo
-        </Link>
+        <div className="flex">
+          <Link
+            to="/"
+            className="text-xl font-semibold text-[#27374D] rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 cursor-pointer"
+          >
+            ShibaToDo
+          </Link>
+          <Link
+            to="/"
+            className="text-[#526D82] text-xl font-semibold rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 cursor-pointer opacity-70"
+          >
+            Readme
+          </Link>
+        </div>
 
         <nav className="flex gap-6 text-sm text-[#27374D]">
           {isAuthenticated && (

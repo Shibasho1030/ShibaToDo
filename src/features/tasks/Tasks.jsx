@@ -5,13 +5,18 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
   // const tasksData = useLoaderData();
   const dispatch = useDispatch();
-  const { currentUserId } = useSelector((state) => state.users);
+  const { currentUserId, isAuthenticated } = useSelector(
+    (state) => state.users,
+  );
   const { tasks } = useSelector((state) => state.tasks);
+  const navigate = useNavigate();
+  if (!isAuthenticated) navigate("/");
 
   useEffect(
     function () {
