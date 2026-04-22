@@ -1,9 +1,65 @@
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { getTasksApi } from "../services/apiTasks";
+import HomeTaskItem from "../features/tasks/HomeTaskItem";
 
 function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.users);
+  const { currentUserId, isAuthenticated } = useSelector(
+    (state) => state.users,
+  );
+  const { tasks } = useSelector((state) => state.tasks);
+  const [finalTasks, setFinalTasks] = useState(tasks ?? null);
+
+  // useEffect(function(){
+  //   async function fetchGetTasks(){
+  //     const res = await getTasksApi()
+  //     setDueTasks(res)
+  //   }catch(err){
+  //     console.error(err.message)
+  //   }
+  //   fetchGetTasks()
+  // })
+
+  // APIからタスク配列を取得
+  useEffect(
+    function () {
+      if (tasks.length) return;
+      async function fetchGetTask() {
+        try {
+          const tasksFromApi = await getTasksApi();
+          // console.log(tasksFromApi);
+          setFinalTasks(tasksFromApi);
+        } catch (err) {
+          console.error(err.message);
+        }
+      }
+      fetchGetTask();
+    },
+    [tasks],
+  );
+
+  // 今日のタスクを表示するための処理
+  const sortedByDueTasks = finalTasks?.toSorted(
+    (a, b) => a.dueDate - b.dueDate,
+  );
+  console.log(sortedByDueTasks);
+
+  // 残りタスク数、未完了タスク数、優先タスク数、表示のための処理
+  // console.log(finalTasks);
+  const filteredTasks = finalTasks?.filter(
+    (task) => +currentUserId === +task.userId,
+  );
+  const tasksNum = filteredTasks?.length;
+  const uncompletedNum = filteredTasks?.reduce(
+    (num, task) => num + !task.completed,
+    0,
+  );
+  const highPriorityNum = filteredTasks?.reduce(
+    (num, task) => num + (task.priority === "high"),
+    0,
+  );
 
   return (
     <section className="flex min-h-[calc(100vh-140px)] items-center justify-center px-6 py-12">
@@ -31,14 +87,14 @@ function Home() {
 
                 <div className="flex flex-wrap gap-4">
                   <button
-                    onClick={() => navigate("/login")}
+                    onClick={() => navigate("users/login")}
                     className="rounded-2xl bg-[#27374D] px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-[#526D82] hover:shadow-xl active:scale-95"
                   >
                     ログインする
                   </button>
 
                   <button
-                    onClick={() => navigate("/register")}
+                    onClick={() => navigate("users/createAccount")}
                     className="rounded-2xl border border-[#9DB2BF] bg-white/70 px-6 py-3 text-sm font-semibold text-[#27374D] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[#DDE6ED] hover:shadow-md active:scale-95"
                   >
                     新規登録
@@ -125,7 +181,7 @@ function Home() {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
+                  {/* <div className="space-y-4">
                     <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-[#9DB2BF]/20">
                       <div className="mb-2 flex items-center justify-between">
                         <p className="font-medium text-[#27374D]">
@@ -173,21 +229,35 @@ function Home() {
                         デザインを整えて本番公開する
                       </p>
                     </div>
-                  </div>
+                  </div> */}
+
+                  <ul>
+                    {sortedByDueTasks
+                      ?.slice(0, Math.min(sortedByDueTasks.length, 3))
+                      .map((task) => {
+                        return <HomeTaskItem task={task} key={task.id} />;
+                      })}
+                  </ul>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div className="rounded-2xl bg-[#DDE6ED]/70 p-4 text-center">
-                      <p className="text-2xl font-bold text-[#27374D]">12</p>
+                      <p className="text-2xl font-bold text-[#27374D] min-h-8">
+                        {tasksNum || ""}
+                      </p>
                       <p className="text-xs text-[#526D82]">タスク</p>
                     </div>
 
-                    <div className="rounded-2xl bg-[#DDE6ED]/70 p-4 text-center">
-                      <p className="text-2xl font-bold text-[#27374D]">5</p>
-                      <p className="text-xs text-[#526D82]">完了</p>
+                    <div className="rounded-2xl min-w-17 bg-[#DDE6ED]/70 p-4 text-center">
+                      <p className="text-2xl font-bold text-[#27374D] min-h-8">
+                        {uncompletedNum || ""}
+                      </p>
+                      <p className="text-xs text-[#526D82]">未完了</p>
                     </div>
 
                     <div className="rounded-2xl bg-[#DDE6ED]/70 p-4 text-center">
-                      <p className="text-2xl font-bold text-[#27374D]">3</p>
+                      <p className="text-2xl font-bold text-[#27374D] min-h-8">
+                        {highPriorityNum || ""}
+                      </p>
                       <p className="text-xs text-[#526D82]">優先</p>
                     </div>
                   </div>

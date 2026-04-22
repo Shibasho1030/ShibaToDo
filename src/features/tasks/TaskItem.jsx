@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { updateTaskApi } from "../../services/apiTasks";
-import { setEditingTaskId, updateTask } from "./tasksSlice";
+import { deleteTaskApi, updateTaskApi } from "../../services/apiTasks";
+import { deleteTask, updateTask } from "./tasksSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 // 単一タスクを表示するためのUIコンポーネント
@@ -22,29 +22,27 @@ function TaskItem({ task }) {
     try {
       dispatch(updateTask(toggledTask));
       await updateTaskApi(id, toggledTask);
-      // const res = await fetch(`http://localhost:8000/tasks/${id}`, {
-      //   method: "PATCH",
-      //   body: JSON.stringify(toggledTask),
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // });
-      // console.log("res.url =", res.url);
-      // console.log("res.status =", res.status);
-      // console.log("res.redirected =", res.redirected);
-      // if (!res.ok) {
-      //   const text = await res.text();
-      //   console.log("error body =", text);
-      //   throw Error("タスクの更新ができませんでした");
-      // }
     } catch (err) {
       dispatch(updateTask(task));
       console.error(err.message);
     }
   }
 
-  function handleEditBtn() {
-    dispatch(setEditingTaskId(task.id));
+  // function handleEditBtn() {
+  //   dispatch(setEditingTaskId(task.id));
+  // }
+
+  async function handleDeleteTask() {
+    try {
+      // console.log("confirm start");
+      const confirmed = window.confirm("このタスクを本当に削除しますか？");
+      if (!confirmed) return;
+      await deleteTaskApi(task.id);
+      dispatch(deleteTask(task.id));
+      navigate("/tasks");
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   return (
@@ -87,6 +85,7 @@ function TaskItem({ task }) {
           {priority === "medium" && "med"}
           {priority === "low" && "low"}
         </span>
+
         {/* <span 見ずらくなるためカテゴリは削除
           className={`cursor-pointer hidden rounded-full min-w-16 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
             ${category && completed ? " grayscale opacity-60 line-through" : ""} ${category ? "" : "opacity-0"}`}
@@ -111,15 +110,16 @@ function TaskItem({ task }) {
 
         <div className="flex items-center gap-1 lg:opacity-0 transition group-hover:opacity-100">
           <Link
-            to="/tasks/form"
+            to={`/tasks/${task.id}/form`}
             className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition 
             hover:bg-stone-100 hover:text-stone-800 cursor-pointer "
-            onClick={handleEditBtn}
+            // onClick={handleEditBtn}
           >
             Edit
           </Link>
           <button
             type="button"
+            onClick={handleDeleteTask}
             className="rounded-lg px-2 py-1 text-xs font-medium text-rose-500 transition hover:bg-rose-50 hover:text-rose-700 cursor-pointer"
           >
             Delete

@@ -1,56 +1,95 @@
 import { useEffect, useState } from "react";
-import { createTaskApi, updateTaskApi } from "../../services/apiTasks";
+import {
+  createTaskApi,
+  deleteTaskApi,
+  updateTaskApi,
+} from "../../services/apiTasks";
 import Button from "../../ui/Button";
-import { createTask, finishEdit, updateTask } from "./tasksSlice";
+import { createTask, deleteTask, finishEdit, updateTask } from "./tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "react-router-dom";
+import { useNavigate, useNavigation, useParams } from "react-router-dom";
 
 // 新規作成または、編集中の場合は編集フォームのUIコンポーネント
 function TaskForm() {
-  const { tasks, editingTaskId } = useSelector((state) => state.tasks);
+  const { tasks } = useSelector((state) => state.tasks);
+  const { currentUserId } = useSelector((state) => state.users);
   const navigation = useNavigation();
-  const isSubmitting = navigation === "submitting";
+  const navigate = useNavigate();
+  const isSubmitting = navigation.state === "submitting";
+  const idFromParams = useParams().id;
 
-  const editingTask = tasks.find((task) => editingTaskId === task.id);
+  const editingTask = tasks.find((task) => idFromParams === task.id);
   const initialFormData = {
     id: "",
+    userId: +currentUserId,
     title: "",
     description: "",
     completed: false,
-    priority: "low",
-    category: "study",
+    priority: "",
+    createdAt: "",
     dueDate: "",
+    updatedAt: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
   const dispatch = useDispatch();
 
+  // console.log(formatDate(new Date().toLocaleString()));
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!formData.title) return;
-    if (editingTaskId) {
-      dispatch(updateTask(formData));
-      updateTaskApi(formData);
+    if (idFromParams) {
+      const updatedTask = {
+        ...formData,
+        updatedAt: new Date().toLocaleString("ja-JP"),
+      };
+      dispatch(updateTask(updatedTask));
+      updateTaskApi(idFromParams, updatedTask);
+      navigate("/tasks");
     }
-    if (!editingTaskId) {
-      dispatch(createTask(formData));
-      createTaskApi(formData);
+    if (!idFromParams) {
+      const updatedTask = {
+        ...formData,
+        createdAt: new Date().toLocaleString("ja-JP"),
+        updatedAt: new Date().toLocaleString("ja-JP"),
+      };
+      dispatch(createTask(updatedTask));
+      createTaskApi(updatedTask);
+      navigate("/tasks");
     }
-    editingTaskId && dispatch(finishEdit());
+    idFromParams && dispatch(finishEdit());
+  }
+
+  async function handleDelete() {
+    try {
+      // console.log("confirm start");
+      const confirmed = window.confirm("このタスクを本当に削除しますか？");
+      if (!confirmed) return;
+      await deleteTaskApi(idFromParams);
+      dispatch(deleteTask(idFromParams));
+      navigate("/tasks");
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   useEffect(
     function () {
       if (!editingTask) return;
-      setFormData({
-        id: editingTask.id,
-        title: editingTask.title,
-        description: editingTask.description,
-        completed: editingTask.completed,
-        priority: editingTask.priority,
-        category: editingTask.category,
-        dueDate: editingTask.dueDate,
-      });
+      setFormData(
+        editingTask,
+        // id: editingTask.id,
+        // userId: editingTask.userId,
+        // title: editingTask.title,
+        // description: editingTask.description,
+        // completed: editingTask.completed,
+        // priority: editingTask.priority,
+        // category: editingTask.category,
+        // createdAt: editingTask.createdAt,
+        // updatedAt: editingTask.updatedAt,
+        // dueDate: editingTask.dueDate,
+      );
     },
     [editingTask],
   );
@@ -104,9 +143,10 @@ function TaskForm() {
               }
               className="w-full rounded-2xl border border-[#9DB2BF] bg-[#F8FBFD] px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
             >
-              <option value="low">低</option>
-              <option value="medium">中</option>
-              <option value="high">高</option>
+              <option value=""></option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
             </select>
           </div>
 
@@ -126,7 +166,7 @@ function TaskForm() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {editingTaskId && (
+          {idFromParams && (
             <div>
               <label className="mb-2 block text-sm font-medium text-[#27374D]">
                 ステータス
@@ -136,12 +176,12 @@ function TaskForm() {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    completed: e.target.value === "true",
+                    completed: e.target.value === "true" ? true : false,
                   })
                 }
                 className="w-full rounded-2xl border border-[#9DB2BF] bg-[#F8FBFD] px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
               >
-                <option value="false">未完了</option>
+                <option value="false">進行中</option>
                 <option value="true">完了</option>
               </select>
             </div>
@@ -173,8 +213,17 @@ function TaskForm() {
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-2">
+        {idFromParams && (
+          <Button
+            type="button"
+            onClick={handleDelete}
+            className="inline-flex items-center rounded-2xl border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:-translate-y-0.5 hover:bg-rose-100 hover:shadow-md active:translate-y-0"
+          >
+            削除する
+          </Button>
+        )}
         <Button type="submit">
-          {isSubmitting ? "送信中..." : editingTaskId ? "更新する" : "追加する"}
+          {isSubmitting ? "送信中..." : idFromParams ? "更新する" : "追加する"}
         </Button>
       </div>
     </form>
