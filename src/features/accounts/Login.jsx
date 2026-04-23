@@ -6,7 +6,6 @@ import {
   useNavigation,
 } from "react-router-dom";
 import Button from "../../ui/Button";
-import { useSelector } from "react-redux";
 import { getUsersApi } from "../../services/apiUsers";
 import store from "../../store";
 import { login } from "./accountsSlice";
@@ -15,7 +14,7 @@ import { login } from "./accountsSlice";
 function Login() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-  const { currentUserId } = useSelector((state) => state.users);
+  // const { currentUserId } = useSelector((state) => state.users);
   const actionData = useActionData();
   return (
     <>
@@ -68,10 +67,10 @@ function Login() {
 
               <input
                 type="text"
-                name="email"
+                name="text"
                 required
                 defaultValue="shiba@example.com"
-                placeholder="example@example.com / tanaka"
+                placeholder="example@example.com / taro"
                 className="w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
               />
             </div>
@@ -134,15 +133,19 @@ export async function action({ request }) {
     remember: data.remember === "on",
   };
   // console.log(userData);
+
+  // 認証機能
   const userDataFromApi = await getUsersApi();
   const passwordCheckedUser = userDataFromApi?.find(
     (user) => user.password === userData?.password,
   );
-  if (passwordCheckedUser?.email !== userData?.email)
+  if (
+    passwordCheckedUser?.email !== userData?.text &&
+    passwordCheckedUser.name !== userData.text
+  )
     return { error: "ユーザー名またはパスワードが違います" };
 
   // ログイン処理
-  // await handleRestoreLoginInfo();
   if (userData.remember) {
     localStorage.setItem(
       "currentUserId",

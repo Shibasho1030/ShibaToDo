@@ -31,8 +31,11 @@ function Header() {
             ShibaToDo
           </Link>
           <Link
-            to="/"
-            className="text-[#526D82] text-xl font-semibold rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 cursor-pointer opacity-70"
+            target="_blank"
+            // 新しく開いたページから元ページを操作しにくくするセキュリティ対策、リンク元ページを送らない設定。
+            rel="noopener noreferrer"
+            to="/Readme"
+            className="text-[#526D82] text-xl font-semibold rounded-xl px-2 py-1 transition hover:bg-[#9DB2BF] hover:text-stone-800 cursor-pointer opacity-90"
           >
             Readme
           </Link>

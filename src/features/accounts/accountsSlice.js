@@ -7,7 +7,7 @@ const savedUserId = JSON.parse(localStorage.getItem("currentUserId"));
 const initialState = {
   currentUserId: savedUserId || null,
   isAuthenticated: !!savedUserId,
-  // isAuthenticated: true,
+  // isAuthenticated: true;
 };
 
 export default function usersReducer(state = initialState, action) {

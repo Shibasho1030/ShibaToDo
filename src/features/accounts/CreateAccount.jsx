@@ -6,6 +6,8 @@ import {
   useNavigation,
 } from "react-router-dom";
 import { createUserApi, getUsersApi } from "../../services/apiUsers";
+import { login } from "./accountsSlice";
+import store from "../../store";
 
 // アカウント作成用UIコンポーネント
 function CreateAccount() {
@@ -182,36 +184,44 @@ function CreateAccount() {
 
 // アカウント制作フォーム送信後処理
 export async function action({ request }) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-  console.log(data);
+  try {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData);
+    // console.log(data);
 
-  const dataFromApi = await getUsersApi();
-  if (
-    dataFromApi.some(
-      (user) => data.name.toLowerCase() === user.name.toLowerCase(),
+    const dataFromApi = await getUsersApi();
+    if (
+      dataFromApi.some(
+        (user) => data.name.toLowerCase() === user.name.toLowerCase(),
+      )
     )
-  )
-    return { field: "name", error: "既にこのユーザー名は使用されています" };
-  // console.log('name is ok')
-  if (dataFromApi.some((user) => data.email === user.email))
-    return {
-      field: "email",
-      error: "既にこのメールアドレスは使用されています",
+      return { field: "name", error: "既にこのユーザー名は使用されています" };
+    // console.log('name is ok')
+    if (dataFromApi.some((user) => data.email === user.email))
+      return {
+        field: "email",
+        error: "既にこのメールアドレスは使用されています",
+      };
+    // console.log('email is ok')
+    if (data.password !== data.confirmPassword)
+      return { field: "password", error: "パスワードが不一致です" };
+    // console.log('password is ok')
+
+    // ログイン処理
+    const newAccountObj = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      id: crypto.randomUUID(),
     };
-  // console.log('email is ok')
-  if (data.password !== data.confirmPassword)
-    return { field: "password", error: "パスワードが不一致です" };
-  // console.log('password is ok')
-  
-  // ログイン処理
-  const newAccountObj = {
-    name: data.name,
-    email: data.email,
-    password: data.password,
-  };
-  await createUserApi(newAccountObj);
-  return redirect("/tasks");
+    // console.log(newAccountObj.id);
+    const data2 = await createUserApi(newAccountObj);
+    // console.log(data2);
+    store.dispatch(login(data2.id));
+    return redirect("/tasks");
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 export default CreateAccount;

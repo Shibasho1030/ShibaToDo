@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
@@ -15,8 +15,6 @@ function Tasks() {
     (state) => state.users,
   );
   const { tasks } = useSelector((state) => state.tasks);
-  const navigate = useNavigate();
-  if (!isAuthenticated) navigate("/");
 
   useEffect(
     function () {
@@ -28,11 +26,13 @@ function Tasks() {
           console.error(err.message);
         }
       }
-      setTasksDataFetch();
+      isAuthenticated && setTasksDataFetch();
     },
-    [dispatch],
+    [dispatch, isAuthenticated],
   );
-  const filteredTasks = tasks.filter((task) => task.userId === +currentUserId);
+  const filteredTasks = tasks.filter((task) => task.userId === currentUserId);
+
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   return (
     <>

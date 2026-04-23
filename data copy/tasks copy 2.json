@@ -1,0 +1,103 @@
+{
+  "users": [
+    {
+      "name": "Shiba",
+      "email": "shiba@example.com",
+      "password": "shibasho",
+      "id": "1"
+    },
+    {
+      "name": "Tanaka",
+      "email": "tanaka@example.com",
+      "password": "tanaka",
+      "id": "2"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "userId": 1,
+      "title": "Todoアプリを作成",
+      "description": "タスクUIと状態管理を作成する",
+      "completed": false,
+      "priority": "medium",
+      "category": "study",
+      "createdAt": "2026-04-17 10:00:00",
+      "dueDate": "2026-04-20 23:59:59",
+      "updatedAt": "2026/4/22 10:03:26"
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "title": "ジムに行く",
+      "description": "脚トレの日",
+      "completed": true,
+      "priority": "low",
+      "category": "personal",
+      "createdAt": "2026-04-18 07:00:00Z",
+      "dueDate": "2026-04-18 20:00:00Z",
+      "updatedAt": "2026/4/22 10:04:33"
+    },
+    {
+      "id": "3",
+      "userId": 1,
+      "title": "長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題の修正。長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題の修正",
+      "description": "長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題を修正する。長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題を修正する",
+      "completed": false,
+      "priority": "high",
+      "category": "other",
+      "createdAt": "2026-04-19 11:30:00",
+      "dueDate": "2026-04-19 18:00:00",
+      "updatedAt": "2026/4/23 10:59:52"
+    },
+    {
+      "id": "4",
+      "userId": 1,
+      "title": "チュートリアルを見る",
+      "description": "React Routerの動画",
+      "completed": false,
+      "priority": "",
+      "category": "study",
+      "createdAt": "2026-04-18 12:00:00",
+      "dueDate": "2026-04-21 23:59:59",
+      "updatedAt": "2026/4/22 10:04:39"
+    },
+    {
+      "id": "5",
+      "userId": 1,
+      "title": "課題を提出する",
+      "description": "React課題提出",
+      "completed": false,
+      "priority": "high",
+      "category": "",
+      "createdAt": "2026-04-15 10:00:00",
+      "dueDate": "2026-04-16 23:59:59",
+      "updatedAt": "2026/4/22 21:34:32"
+    },
+    {
+      "id": "6",
+      "userId": 1,
+      "title": "部屋を掃除する",
+      "description": "部屋の掃除",
+      "completed": false,
+      "priority": "low",
+      "category": "personal",
+      "createdAt": "2026-04-18 08:00:00",
+      "dueDate": "",
+      "updatedAt": "2026/4/22 21:34:40"
+    },
+    {
+      "id": "7",
+      "userId": 2,
+      "title": "掃除する",
+      "description": "掃除",
+      "completed": false,
+      "priority": "high",
+      "category": "personal",
+      "createdAt": "2026-04-18 08:00:00",
+      "dueDate": "2026-04-19 11:30:00",
+      "updatedAt": "2026/4/23 9:55:09"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

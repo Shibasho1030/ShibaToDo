@@ -21,7 +21,7 @@ function TaskForm() {
   const editingTask = tasks.find((task) => idFromParams === task.id);
   const initialFormData = {
     id: "",
-    userId: +currentUserId,
+    userId: currentUserId,
     title: "",
     description: "",
     completed: false,
