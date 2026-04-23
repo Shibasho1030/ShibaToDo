@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import Loader from "../../ui/Loader";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../utils/helpers";
@@ -15,7 +15,6 @@ function TaskShow() {
   console.log(idFromParams);
   const taskFromRedux = tasks.find((t) => +t.id === +idFromParams);
   const [task, setTask] = useState(taskFromRedux ?? null);
-  if (!isAuthenticated) navigate("/");
 
   // 再リロードによりReduxが初期化された場合に必要な処理
   useEffect(
@@ -53,6 +52,8 @@ function TaskShow() {
   function handleDoubleClick() {
     navigate(`/tasks/${idFromParams}/form`);
   }
+
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">

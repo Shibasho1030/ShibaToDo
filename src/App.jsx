@@ -11,6 +11,7 @@ import { action as createAccountAction } from "./features/accounts/CreateAccount
 import Terms from "../src/features/pages/Terms";
 import Privacy from "../src/features/pages/Privacy";
 import TaskShow from "./features/tasks/TaskShow";
+import Readme from "./features/pages/Readme";
 
 // console.log("App mount");
 
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
   {
     path: "/privacy",
     element: <Privacy />,
+  },
+  {
+    path: "/readme",
+    element: <Readme />,
   },
 ]);
 

@@ -40,17 +40,31 @@ function Home() {
     [tasks],
   );
 
-  // 今日のタスクを表示するための処理
-  const sortedByDueTasks = finalTasks?.toSorted(
-    (a, b) => a.dueDate - b.dueDate,
-  );
-  console.log(sortedByDueTasks);
-
-  // 残りタスク数、未完了タスク数、優先タスク数、表示のための処理
-  // console.log(finalTasks);
   const filteredTasks = finalTasks?.filter(
     (task) => +currentUserId === +task.userId,
   );
+
+  // 今日のタスクを表示するための処理
+  const sortedByDueTasks = filteredTasks
+    ?.filter((task) => task.completed !== "true")
+    .toSorted((a, b) => {
+      const dueTimeA = new Date(a.dueDate).getTime();
+      const dueTimeB = new Date(b.dueDate).getTime();
+      if (dueTimeA - dueTimeB < 0) return 1;
+      if (dueTimeA - dueTimeB > 0) return -1;
+
+      const priorityOrder = {
+        low: 1,
+        medium: 0,
+        high: -1,
+      };
+
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    });
+  // console.log(sortedByDueTasks);
+
+  // 残りタスク数、未完了タスク数、優先タスク数、表示のための処理
+  // console.log(finalTasks);
   const tasksNum = filteredTasks?.length;
   const uncompletedNum = filteredTasks?.reduce(
     (num, task) => num + !task.completed,
