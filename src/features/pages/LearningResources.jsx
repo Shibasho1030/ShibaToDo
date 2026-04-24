@@ -20,7 +20,7 @@ function LearningResources() {
               The Ultimate React Course
             </p>
             <p className="mt-2 text-sm leading-7 text-[#526D82]">
-              Reactのコンポーネント設計、状態管理、ルーティング、実践的なアプリ開発を学習。
+              Reactのコンポーネント設計、状態管理、ルーティング、実践的なアプリ開発を学習。(学習：約200時間)
             </p>
           </a>
 
@@ -34,7 +34,7 @@ function LearningResources() {
               The Complete JavaScript Course
             </p>
             <p className="mt-2 text-sm leading-7 text-[#526D82]">
-              JavaScriptの基礎から非同期処理、配列操作、設計の考え方までを学習。
+              JavaScriptの基礎から非同期処理、配列操作、設計の考え方までを学習。(学習：約300時間)
             </p>
           </a>
 
@@ -48,7 +48,7 @@ function LearningResources() {
               Build Responsive Real-World Websites with HTML and CSS
             </p>
             <p className="mt-2 text-sm leading-7 text-[#526D82]">
-              HTML/CSSの基礎、レイアウト設計、レスポンシブ対応、UIの整え方を学習。
+              HTML/CSSの基礎、レイアウト設計、レスポンシブ対応、UIの整え方を学習。(学習：約100時間)
             </p>
           </a>
 
@@ -62,7 +62,7 @@ function LearningResources() {
               The Complete Web Development Bootcamp
             </p>
             <p className="mt-2 text-sm leading-7 text-[#526D82]">
-              フロントエンドからバックエンドまで、Web開発全体の流れを広く学習。
+              フロントエンドからバックエンドまで、Web開発全体の流れを広く学習。(学習：約150時間)
             </p>
           </a>
 
@@ -76,7 +76,7 @@ function LearningResources() {
               Node.js, Express, MongoDB Bootcamp
             </p>
             <p className="mt-2 text-sm leading-7 text-[#526D82]">
-              バックエンドの理解を深めるために学習。
+              バックエンドの理解を深めるために学習。(学習：約50時間)
             </p>
           </a>
         </div>

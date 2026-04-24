@@ -1,3 +1,7 @@
+// 処理の流れが追いやすく、状態管理の仕組みを理解しやすいと感じたため、
+// 今回のWebアプリでは、Redux ToolkitのcreateSliceではなく、互換性のある旧来のReduxの書き方でReducerファイルを定義する。
+// import { createSlice } from "@reduxjs/toolkit";
+
 // タスク関連の状態を管理するRedux Toolkit用のスライスファイル
 
 const initialState = {
