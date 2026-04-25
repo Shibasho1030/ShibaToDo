@@ -10,11 +10,9 @@ function Hello() {
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-[#27374D] sm:text-5xl">
             ShibaToDo
           </h1>
-
-          <p className="mt-5 max-w-3xl text-base leading-8 text-[#526D82] sm:text-lg">
-            React と Tailwind CSS で構築したタスク管理アプリです。
-            タスクの追加・編集・削除・並べ替えを通して、
-            ノンストレスで直感的にタスクを管理できる体験を目指しました。
+          <h2 className="mt-7 text-xl font-bold text-[#27374D]">制作の背景</h2>
+          <p className=" max-w-3xl text-base leading-8 text-[#526D82] sm:text-lg">
+            私は一つのことに集中して取り組むことが得意な一方で、複数のタスクを同時に整理しながら進めることに課題を感じていました。そこで、自分自身のタスク管理力を高めることを目的に、日々の予定や作業を分かりやすく管理できるアプリを制作しました。
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">

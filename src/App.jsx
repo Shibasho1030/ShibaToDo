@@ -8,10 +8,10 @@ import Error from "./ui/Error";
 import CreateAccount from "./features/accounts/CreateAccount";
 import { action as loginAction } from "./features/accounts/Login";
 import { action as createAccountAction } from "./features/accounts/CreateAccount";
-import Terms from "../src/features/pages/Terms";
-import Privacy from "../src/features/pages/Privacy";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import TaskShow from "./features/tasks/TaskShow";
-import Readme from "./features/pages/Readme";
+import Readme from "./pages/Readme";
 
 // console.log("App mount");
 

@@ -8,6 +8,10 @@ function TechStack() {
       name: "json-server",
       desc: "バックエンドの代替として用いた",
     },
+    {
+      name: "ChatGPT",
+      desc: "静的UIのたたき台・不明点の確認・実装の補助に活用",
+    },
   ];
 
   return (
