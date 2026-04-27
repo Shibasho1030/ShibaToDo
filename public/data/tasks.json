@@ -19,7 +19,7 @@
       "userId": "1",
       "title": "Todoアプリを作成",
       "description": "タスクUIと状態管理を作成する",
-      "completed": false,
+      "completed": true,
       "priority": "medium",
       "category": "study",
       "createdAt": "2026-04-17 10:00:00",
