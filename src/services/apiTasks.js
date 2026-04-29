@@ -3,17 +3,25 @@
 const API_URL = "http://localhost:8000/tasks";
 
 export async function getTasksApi() {
-  const res = await fetch(`${API_URL}`);
-  if (!res.ok) throw Error("タスクリストの取得に失敗しました");
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetch(`${API_URL}`);
+    if (!res.ok) throw Error("タスクリストの取得に失敗しました");
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 export async function getTaskApi(id) {
-  const res = await fetch(`${API_URL}/${id}`);
-  if (!res.ok) throw Error("タスクの取得に失敗しました");
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetch(`${API_URL}/${id}`);
+    if (!res.ok) throw Error("タスクの取得に失敗しました");
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 export async function createTaskApi(newOrder) {

@@ -25,7 +25,7 @@ function LearningResources() {
           </a>
 
           <a
-            href="https://www.udemy.com/course/the-complete-javascript-course/learn/lecture/22649313?start=15#content"
+            href="https://www.udemy.com/certificate/UC-3079e375-6428-4cf5-ba36-5f8a2292a36a/"
             target="_blank"
             rel="noopener noreferrer"
             className="block rounded-3xl border border-[#9DB2BF]/20 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
