@@ -33,11 +33,11 @@ export async function createTaskApi(newOrder) {
         "Content-Type": "application/json",
       },
     });
-    if (!res.ok) throw Error();
+    if (!res.ok) throw Error("タスクの作成に失敗しました");
     const data = await res.json();
     return data;
-  } catch {
-    throw Error("タスクの作成に失敗しました");
+  } catch (err) {
+    console.error(err.message);
   }
 }
 
@@ -50,11 +50,11 @@ export async function updateTaskApi(id, updateObj) {
         "Content-Type": "application/json",
       },
     });
-    if (!res.ok) throw Error();
+    if (!res.ok) throw Error("タスクの更新ができませんでした");
     const data = await res.json();
     return data;
-  } catch {
-    throw Error("タスクの更新ができませんでした");
+  } catch (err) {
+    console.error(err.message);
   }
 }
 
@@ -63,9 +63,9 @@ export async function deleteTaskApi(id) {
     const res = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
     });
-    if (!res.ok) throw Error();
+    if (!res.ok) throw Error("タスクの削除ができませんでした");
     return true;
-  } catch {
-    throw Error("タスクの削除ができませんでした");
+  } catch (err) {
+    console.error(err.message);
   }
 }
