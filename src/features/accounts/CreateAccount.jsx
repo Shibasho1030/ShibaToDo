@@ -218,7 +218,7 @@ export async function action({ request }) {
     const data2 = await createUserApi(newAccountObj);
     // console.log(data2);
     store.dispatch(login(data2.id));
-    return redirect("/tasks");
+    return redirect("/");
   } catch (err) {
     console.error(err.message);
   }

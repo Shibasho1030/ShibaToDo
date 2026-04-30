@@ -12,7 +12,7 @@ function TaskShow() {
   const idFromParams = useParams().id;
   const { tasks } = useSelector((state) => state.tasks);
   const { isAuthenticated } = useSelector((state) => state.users);
-  console.log(idFromParams);
+  // console.log(idFromParams);
   const taskFromRedux = tasks.find((t) => +t.id === +idFromParams);
   const [task, setTask] = useState(taskFromRedux ?? null);
 

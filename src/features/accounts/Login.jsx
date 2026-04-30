@@ -157,7 +157,7 @@ export async function action({ request }) {
 
   store.dispatch(login(passwordCheckedUser.id));
 
-  return redirect(`/tasks`);
+  return redirect(`/`);
 }
 
 export default Login;
