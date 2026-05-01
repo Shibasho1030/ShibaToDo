@@ -2,7 +2,7 @@
 
 ## URL
 
-今後実装予定。
+https://shibatodo.netlify.app/
 
 ---
 
