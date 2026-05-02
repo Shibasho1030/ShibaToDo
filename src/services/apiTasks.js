@@ -2,9 +2,12 @@
 
 const API_URL = "http://localhost:8000/tasks";
 
-export async function getTasksApi() {
+export async function getTasksApi(userId) {
   try {
-    const res = await fetch(`${API_URL}`);
+    const where = encodeURIComponent(
+      JSON.stringify({ userId: { eq: userId } }),
+    );
+    const res = await fetch(`${API_URL}?_where=${where}&_sort=order`);
     if (!res.ok) throw Error("タスクリストの取得に失敗しました");
     const data = await res.json();
     return data;

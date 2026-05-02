@@ -4,7 +4,14 @@ import { deleteTask, updateTask } from "./tasksSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 // 単一タスクを表示するためのUIコンポーネント
-function TaskItem({ task }) {
+function TaskItem({
+  task,
+  handleDragStart,
+  handleDragOver,
+  handleDragEnd,
+  handleDrop,
+  handleDragMouseDown,
+}) {
   const { id, title, completed, priority, dueDate } = task;
   const navigate = useNavigate();
 
@@ -28,10 +35,6 @@ function TaskItem({ task }) {
     }
   }
 
-  // function handleEditBtn() {
-  //   dispatch(setEditingTaskId(task.id));
-  // }
-
   async function handleDeleteTask() {
     try {
       // console.log("confirm start");
@@ -47,7 +50,12 @@ function TaskItem({ task }) {
 
   return (
     <li
-      onDoubleClick={() => navigate(`/tasks/${task.id}`)}
+      draggable
+      onDragStart={(e, id) => handleDragStart(e, id)}
+      onDragEnd={handleDragEnd}
+      onDrop={handleDrop}
+      onDoubleClick={() => navigate(`/tasks/${id}`)}
+      onDragOver={(e) => handleDragOver(e)}
       className="mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg"
     >
       <div className="flex min-w-0 items-center gap-3">
@@ -86,22 +94,6 @@ function TaskItem({ task }) {
           {priority === "low" && "low"}
         </span>
 
-        {/* <span 見ずらくなるためカテゴリは削除
-          className={`cursor-pointer hidden rounded-full min-w-16 bg-stone-100 px-2.5 py-1 text-[11px] font-medium text-stone-600 sm:inline-block 
-            ${category && completed ? " grayscale opacity-60 line-through" : ""} ${category ? "" : "opacity-0"}`}
-        >
-          {category === "study" && "学習"}
-          {category === "work" && "仕事"}
-          {category === "personal" && "個人"}
-          {category === "health" && "健康"}
-          {category === "shopping" && "買い物"}
-          {category === "finance" && "お金"}
-          {category === "exercise" && "運動"}
-          {category === "family" && "家族"}
-          {category === "hobby" && "趣味"}
-          {category === "other" && "その他"}
-        </span> */}
-
         <span
           className={`hidden text-xs min-w-15 text-stone-500 md:inline-block h-4 ${completed ? " grayscale opacity-60 line-through" : ""}`}
         >
@@ -110,19 +102,29 @@ function TaskItem({ task }) {
 
         <div className="flex items-center gap-1 lg:opacity-0 transition group-hover:opacity-100">
           <Link
-            to={`/tasks/${task.id}/form`}
+            to={`/tasks/${id}/form`}
             className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition 
             hover:bg-stone-100 hover:text-stone-800 cursor-pointer "
-            // onClick={handleEditBtn}
           >
             Edit
           </Link>
+
           <button
             type="button"
             onClick={handleDeleteTask}
             className="rounded-lg px-2 py-1 text-xs font-medium text-rose-500 transition hover:bg-rose-50 hover:text-rose-700 cursor-pointer"
           >
             Delete
+          </button>
+
+          <button
+            onMouseDown={handleDragMouseDown}
+            type="button"
+            aria-label="並べ替え"
+            name="sort"
+            className="cursor-grab rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 active:cursor-grabbing active:scale-95"
+          >
+            <span className="text-xl leading-none">≡</span>
           </button>
         </div>
       </div>
