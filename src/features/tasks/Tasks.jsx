@@ -2,13 +2,19 @@ import { getTasksApi } from "../../services/apiTasks";
 import TaskItem from "./TaskItem";
 import LinkButton from "../../ui/LinkButton";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
+  const draggedTaskId = useRef(null);
+  const canDrag = useRef(false);
+  const originalTasks = useRef(null);
+  const [emptyIndex, setEmptyIndex] = useState(null);
+  const [draggingId, setDraggingId] = useState(null);
+
   // const tasksData = useLoaderData();
   const dispatch = useDispatch();
   const { currentUserId, isAuthenticated } = useSelector(
@@ -16,23 +22,86 @@ function Tasks() {
   );
   const { tasks } = useSelector((state) => state.tasks);
 
+  // タスク一覧呼び出し＆ステートに割り当て
   useEffect(
     function () {
       async function setTasksDataFetch() {
         try {
-          const tasksDataFromApi = await getTasksApi();
+          console.log(currentUserId);
+          const tasksDataFromApi = await getTasksApi(currentUserId);
+          // console.log(tasksDataFromApi);
+          // console.log("currentUserId:", currentUserId);
+          // console.log("typeof currentUserId:", typeof currentUserId);
+          // console.log(
+          //   "JSON.stringify currentUserId:",
+          //   JSON.stringify(currentUserId),
+          // );
           dispatch(setTasks(tasksDataFromApi));
         } catch (err) {
           console.error(err.message);
         }
       }
-      isAuthenticated && setTasksDataFetch();
+      console.log(isAuthenticated, +currentUserId);
+      // Nologin時はタスク一覧呼び出し不要
+      if (isAuthenticated && currentUserId) setTasksDataFetch();
     },
-    [dispatch, isAuthenticated],
+    [dispatch, isAuthenticated, currentUserId],
   );
-  const filteredTasks = tasks.filter((task) => task.userId === currentUserId);
+
+  // Api取得の際にユーザーのフィルタリングはしているため不要
+  // const filteredTasks = tasks.filter((task) => task.userId === currentUserId);
 
   if (!isAuthenticated) return <Navigate to="/" replace />;
+
+  function handleDragMouseDown() {
+    canDrag.current = true;
+  }
+
+  function handleDragStart(e, id) {
+    if (!canDrag.current) {
+      e.preventDefault();
+      return;
+    }
+
+    draggedTaskId.current = id;
+    originalTasks.current = tasks;
+    setDraggingId(id);
+
+    // ドラッグ中にこの操作は移動だとブラウザへ伝える設定
+    e.dataTransfer.effectAllowed = "move";
+    // Firefox対策
+    e.dataTransfer.setData("text/plain", String(id));
+  }
+
+  function handleDragOver(e, index) {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const middleY = rect.top + rect.height / 2;
+    // console.log(e.clientX, e.clientY);
+    // console.log(rect.top, rect.bottom);
+    // console.log(middleY);
+
+    // Taskの上側に触れた時
+    if (middleY > e.clientY) {
+      setEmptyIndex(index + 1);
+    } else {
+      setEmptyIndex(index);
+    }
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    setDraggingId(null);
+    setEmptyIndex(null);
+    draggedTaskId.current = null;
+  }
+
+  function handleDragEnd() {
+    canDrag.current = false;
+    setDraggingId(null);
+    setEmptyIndex(null);
+    draggedTaskId.current = null;
+  }
 
   return (
     <>
@@ -48,19 +117,31 @@ function Tasks() {
 
         <div className="ml-4 flex shrink-0 items-center gap-2 sm:gap-3">
           <span className="inline-block min-w-15 text-center">優先度</span>
-          {/* <span className="hidden min-w-10 text-center sm:inline-block">
-            カテゴリ
-          </span> */}
-          <span className="hidden min-w-11 text-center md:inline-block ">
+
+          <span className="hidden min-w-10 text-center md:inline-block ">
             期限
           </span>
-          <span className="min-w-21 text-center md:min-w-25">操作</span>
+          <span className="min-w-27 text-center md:min-w-32">操作</span>
         </div>
       </div>
       <ul>
-        {filteredTasks.map((task) => {
+        {tasks.map((task, i) => {
           // console.log(task.userId, currentUserId);
-          return <TaskItem task={task} key={task.id} />;
+          return (
+            <div key={task.id}>
+              {emptyIndex === i && (
+                <li className="my-2 h-16 rounded-xl border-2 border-dashed border-slate-300 bg-slate-200/30" />
+              )}
+              <TaskItem
+                task={task}
+                handleDragStart={handleDragStart}
+                handleDragOver={handleDragOver}
+                handleDragEnd={handleDragEnd}
+                handleDrop={handleDrop}
+                handleDragMouseDown={handleDragMouseDown}
+              />
+            </div>
+          );
         })}
       </ul>
     </>

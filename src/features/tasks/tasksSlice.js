@@ -3,7 +3,6 @@
 // import { createSlice } from "@reduxjs/toolkit";
 
 // タスク関連の状態を管理するRedux Toolkit用のスライスファイル
-
 const initialState = {
   tasks: [],
   editingTaskId: null,
@@ -44,6 +43,11 @@ export default function tasksReducer(state = initialState, action) {
         ...state,
         editingTaskId: null,
       };
+    case "tasks/reorderTasks":
+      return {
+        ...state,
+        tasks: action.payload,
+      };
     default:
       return state;
   }
@@ -66,4 +70,7 @@ export function setTasks(updateTask) {
 // }
 export function deleteTask(id) {
   return { type: "tasks/deleteTask", payload: id };
+}
+export function reorderTasks(reorderedTasks) {
+  return { type: "tasks/reorderTasks", payload: reorderedTasks };
 }
