@@ -27,11 +27,11 @@ export async function getTaskApi(id) {
   }
 }
 
-export async function createTaskApi(newOrder) {
+export async function createTaskApi(newTask) {
   try {
     const res = await fetch(`${API_URL}`, {
       method: "POST",
-      body: JSON.stringify(newOrder),
+      body: JSON.stringify(newTask),
       headers: {
         "Content-Type": "application/json",
       },
@@ -56,6 +56,30 @@ export async function updateTaskApi(id, updateObj) {
     if (!res.ok) throw Error("タスクの更新ができませんでした");
     const data = await res.json();
     return data;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+export async function updateTasksApi(tasks) {
+  try {
+    const updatedTasks = await Promise.all(
+      tasks.map(async (task) => {
+        const res = await fetch(`${API_URL}/${task.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(task),
+        });
+
+        if (!res.ok) throw Error("タスクの更新に失敗しました");
+
+        return await res.json();
+      }),
+    );
+
+    return updatedTasks;
   } catch (err) {
     console.error(err.message);
   }

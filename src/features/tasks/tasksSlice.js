@@ -59,11 +59,12 @@ export function finishEdit() {
 export function createTask(newTask) {
   return { type: "tasks/createTask", payload: newTask };
 }
+// 1つのタスクが変更された時、tasks配列stateを更新するaction creator
 export function updateTask(updatedTask) {
   return { type: "tasks/updateTask", payload: updatedTask };
 }
-export function setTasks(updateTask) {
-  return { type: "tasks/setTasks", payload: updateTask };
+export function setTasks(updateTasks) {
+  return { type: "tasks/setTasks", payload: updateTasks };
 }
 // export function setEditingTaskId(taskId) {
 //   return { type: "tasks/setEditingTaskId", payload: taskId };
@@ -71,6 +72,7 @@ export function setTasks(updateTask) {
 export function deleteTask(id) {
   return { type: "tasks/deleteTask", payload: id };
 }
-export function reorderTasks(reorderedTasks) {
+export function reorderTasks(tasks) {
+  const reorderedTasks = tasks.toSorted((a, b) => a.order - b.order);
   return { type: "tasks/reorderTasks", payload: reorderedTasks };
 }

@@ -1,4 +1,4 @@
-import { getTasksApi } from "../../services/apiTasks";
+import { getTasksApi, updateTasksApi } from "../../services/apiTasks";
 import TaskItem from "./TaskItem";
 import LinkButton from "../../ui/LinkButton";
 import { useDispatch } from "react-redux";
@@ -9,13 +9,14 @@ import { Navigate } from "react-router-dom";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
-  const draggedTaskId = useRef(null);
+  const didDrop = useRef(false);
   const canDrag = useRef(false);
   const originalTasks = useRef(null);
-  const [emptyIndex, setEmptyIndex] = useState(null);
   const [draggingId, setDraggingId] = useState(null);
 
+  // loaderではコンポーネント内のRedux stateを直接参照しづらいため、ログイン中のuserIdをuseSelectorで取得できるuseEffect内でtasks配列を取得する形に変更
   // const tasksData = useLoaderData();
+
   const dispatch = useDispatch();
   const { currentUserId, isAuthenticated } = useSelector(
     (state) => state.users,
@@ -27,21 +28,14 @@ function Tasks() {
     function () {
       async function setTasksDataFetch() {
         try {
-          console.log(currentUserId);
+          // console.log(currentUserId);
           const tasksDataFromApi = await getTasksApi(currentUserId);
-          // console.log(tasksDataFromApi);
-          // console.log("currentUserId:", currentUserId);
-          // console.log("typeof currentUserId:", typeof currentUserId);
-          // console.log(
-          //   "JSON.stringify currentUserId:",
-          //   JSON.stringify(currentUserId),
-          // );
           dispatch(setTasks(tasksDataFromApi));
         } catch (err) {
           console.error(err.message);
         }
       }
-      console.log(isAuthenticated, +currentUserId);
+      // console.log(isAuthenticated, +currentUserId);
       // Nologin時はタスク一覧呼び出し不要
       if (isAuthenticated && currentUserId) setTasksDataFetch();
     },
@@ -63,7 +57,7 @@ function Tasks() {
       return;
     }
 
-    draggedTaskId.current = id;
+    didDrop.current = false;
     originalTasks.current = tasks;
     setDraggingId(id);
 
@@ -73,34 +67,65 @@ function Tasks() {
     e.dataTransfer.setData("text/plain", String(id));
   }
 
-  function handleDragOver(e, index) {
+  function handleDragOver(e, currentOrder) {
     e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const middleY = rect.top + rect.height / 2;
+
+    if (!draggingId) return;
+    const draggingTask = tasks.find((task) => task.id === draggingId);
+    if (!draggingTask) return;
+    if (draggingTask.order === currentOrder) return;
+
+    // console.log('render');
+    // taskを並び替えし、tasksステートを更新
+    // const draggedOrder = draggingTask.order;
+
+    // if (order > draggedOrder) {
+    const newTasks = tasks.filter((task) => task.id !== draggingId);
+    newTasks.splice(currentOrder - 1, 0, draggingTask);
+    const reorderedTasks = newTasks.map((task, index) => ({
+      ...task,
+      order: index + 1,
+    }));
+    dispatch(setTasks(reorderedTasks));
+
+    // 実装難易度が高いと感じたため、今回は簡易的に並び替え機能を実装
+    // const rect = e.currentTarget.getBoundingClientRect();
+    // const middleY = rect.top + rect.height / 2;
     // console.log(e.clientX, e.clientY);
     // console.log(rect.top, rect.bottom);
     // console.log(middleY);
-
     // Taskの上側に触れた時
-    if (middleY > e.clientY) {
-      setEmptyIndex(index + 1);
-    } else {
-      setEmptyIndex(index);
+    // if (middleY > e.clientY) {
+    // } else {
+    // }
+  }
+
+  async function handleDrop(e) {
+    e.preventDefault();
+
+    // タスク枠内でタスクを話した場合
+    didDrop.current = true;
+
+    try {
+      //APIでjsonファイルも更新
+      await updateTasksApi(tasks);
+    } catch (err) {
+      console.error(err.message);
+      dispatch(setTasks(originalTasks.current));
     }
   }
 
-  function handleDrop(e) {
-    e.preventDefault();
-    setDraggingId(null);
-    setEmptyIndex(null);
-    draggedTaskId.current = null;
-  }
+  async function handleDragEnd() {
+    // タスク枠外で話した場合
+    if (!didDrop.current) {
+      dispatch(setTasks(originalTasks.current));
+    }
 
-  function handleDragEnd() {
-    canDrag.current = false;
+    // reset state
+    didDrop.current = false;
     setDraggingId(null);
-    setEmptyIndex(null);
-    draggedTaskId.current = null;
+    originalTasks.current = null;
+    canDrag.current = false;
   }
 
   return (
@@ -125,22 +150,19 @@ function Tasks() {
         </div>
       </div>
       <ul>
-        {tasks.map((task, i) => {
+        {tasks.map((task) => {
           // console.log(task.userId, currentUserId);
           return (
-            <div key={task.id}>
-              {emptyIndex === i && (
-                <li className="my-2 h-16 rounded-xl border-2 border-dashed border-slate-300 bg-slate-200/30" />
-              )}
-              <TaskItem
-                task={task}
-                handleDragStart={handleDragStart}
-                handleDragOver={handleDragOver}
-                handleDragEnd={handleDragEnd}
-                handleDrop={handleDrop}
-                handleDragMouseDown={handleDragMouseDown}
-              />
-            </div>
+            <TaskItem
+              task={task}
+              key={task.id}
+              draggingId={draggingId}
+              handleDragStart={handleDragStart}
+              handleDragOver={handleDragOver}
+              handleDragEnd={handleDragEnd}
+              handleDrop={handleDrop}
+              handleDragMouseDown={handleDragMouseDown}
+            />
           );
         })}
       </ul>
