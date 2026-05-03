@@ -2,6 +2,7 @@ import Closing from "./Closing";
 import ColorPalette from "./ColorPalette";
 import FigmaDesignProcess from "./FigmaDesignProcess";
 import Hello from "./Hello";
+import History from "./History";
 import Improvements from "./Improvements";
 import LearningResources from "./LearningResources";
 import Overview from "./Overview";
@@ -16,6 +17,7 @@ function Readme() {
         <Hello />
         <div className="space-y-12 px-6 py-8 sm:px-10 sm:py-10">
           <Overview />
+          <History />
           <FigmaDesignProcess />
           <Requirements />
           <Improvements />

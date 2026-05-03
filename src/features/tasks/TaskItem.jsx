@@ -6,13 +6,16 @@ import { Link, useNavigate } from "react-router-dom";
 // 単一タスクを表示するためのUIコンポーネント
 function TaskItem({
   task,
+  draggingId,
   handleDragStart,
   handleDragOver,
   handleDragEnd,
   handleDrop,
   handleDragMouseDown,
 }) {
-  const { id, title, completed, priority, dueDate } = task;
+  const draggedClassName =
+    "opacity-40 scale-[0.98] border-dashed bg-slate-100 shadow-none";
+  const { id, title, completed, priority, dueDate, order } = task;
   const navigate = useNavigate();
 
   const priorityStyle = {
@@ -51,12 +54,12 @@ function TaskItem({
   return (
     <li
       draggable
-      onDragStart={(e, id) => handleDragStart(e, id)}
+      onDragStart={(e) => handleDragStart(e, id)}
       onDragEnd={handleDragEnd}
-      onDrop={handleDrop}
+      onDrop={(e) => handleDrop(e, order)}
       onDoubleClick={() => navigate(`/tasks/${id}`)}
-      onDragOver={(e) => handleDragOver(e)}
-      className="mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg"
+      onDragOver={(e) => handleDragOver(e, order)}
+      className={`mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg ${String(id) === String(draggingId) ? draggedClassName : ""}`}
     >
       <div className="flex min-w-0 items-center gap-3">
         <button
@@ -122,7 +125,7 @@ function TaskItem({
             type="button"
             aria-label="並べ替え"
             name="sort"
-            className="cursor-grab rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 active:cursor-grabbing active:scale-95"
+            className="cursor-grab w-9 h-6  rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 active:cursor-grabbing active:scale-95"
           >
             <span className="text-xl leading-none">≡</span>
           </button>
