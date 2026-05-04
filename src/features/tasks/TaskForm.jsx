@@ -78,7 +78,10 @@ function TaskForm() {
     function () {
       if (!editingTask) return;
       setFormData(
-        editingTask,
+        {
+          ...editingTask,
+          updatedAt: new Date().toLocaleString("ja-JP"),
+        },
         // id: editingTask.id,
         // userId: editingTask.userId,
         // title: editingTask.title,

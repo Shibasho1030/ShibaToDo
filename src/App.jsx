@@ -12,6 +12,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import TaskShow from "./features/tasks/TaskShow";
 import Readme from "./pages/Readme";
+import { action as toggleTaskAction } from "./features/tasks/TaskItem";
 
 // console.log("App mount");
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/tasks/:id",
         element: <TaskShow />,
+      },
+      {
+        path: "/tasks/:taskId/toggle",
+        action: toggleTaskAction,
       },
     ],
   },
