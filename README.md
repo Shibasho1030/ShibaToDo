@@ -4,6 +4,8 @@
 
 https://shibatodo.netlify.app/
 
+※ アプリ内にもREADMEページを用意しています。
+
 ---
 
 ## 制作の背景
