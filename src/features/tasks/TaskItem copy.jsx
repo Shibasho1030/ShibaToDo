@@ -1,8 +1,7 @@
 import { useDispatch } from "react-redux";
 import { deleteTaskApi, updateTaskApi } from "../../services/apiTasks";
 import { deleteTask, updateTask } from "./tasksSlice";
-import { Link, useFetcher, useNavigate } from "react-router-dom";
-import store from "../../store";
+import { Link, useNavigate } from "react-router-dom";
 
 // 単一タスクを表示するためのUIコンポーネント
 function TaskItem({
@@ -10,12 +9,10 @@ function TaskItem({
   draggingId,
   handleDragStart,
   handleDragOver,
-  handleDrop,
   handleDragEnd,
+  handleDrop,
   handleDragMouseDown,
 }) {
-  const fetcher = useFetcher();
-  const isUpdating = fetcher.state !== "idle";
   const draggedClassName =
     "opacity-40 scale-[0.98] border-dashed bg-slate-100 shadow-none";
   const { id, title, completed, priority, dueDate, order } = task;
@@ -28,7 +25,6 @@ function TaskItem({
   };
   const dispatch = useDispatch();
 
-  /* fetcher.Formに改良を行ったため不要
   async function handleToggle(e) {
     e.preventDefault();
     const toggledTask = { ...task, completed: !completed };
@@ -41,7 +37,6 @@ function TaskItem({
       console.error(err.message);
     }
   }
-  */
 
   async function handleDeleteTask() {
     try {
@@ -67,20 +62,18 @@ function TaskItem({
       className={`mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg ${String(id) === String(draggingId) ? draggedClassName : ""}`}
     >
       <div className="flex min-w-0 items-center gap-3">
-        <fetcher.Form method="PATCH" action={`/tasks/${id}/toggle`}>
-          <button
-            type="submit"
-            disabled={isUpdating}
-            className={`cursor-pointer flex h-5 min-w-5 items-center justify-center rounded-full border  ${
-              completed
-                ? "border-[#27374D] bg-[#27374D] text-[#DDE6ED]"
-                : "border-stone-300 bg-white text-transparent hover:border-[#526D82]"
-            }`}
-            aria-label="toggle task"
-          >
-            ✓
-          </button>
-        </fetcher.Form>
+        <button
+          onClick={handleToggle}
+          type="button"
+          className={`cursor-pointer flex h-5 min-w-5 items-center justify-center rounded-full border  ${
+            completed
+              ? "border-[#27374D] bg-[#27374D] text-[#DDE6ED]"
+              : "border-stone-300 bg-white text-transparent hover:border-[#526D82]"
+          }`}
+          aria-label="toggle task"
+        >
+          ✓
+        </button>
 
         <div className="min-w-0">
           <p
@@ -143,30 +136,3 @@ function TaskItem({
 }
 
 export default TaskItem;
-
-export async function action({ params }) {
-  const id = params.taskId;
-  const task = store
-    .getState()
-    .tasks.tasks.find((task) => String(task.id) === String(id));
-
-  if (!task) {
-    throw new Error("対象のタスクが見つかりません");
-  }
-
-  const toggledTask = {
-    ...task,
-    completed: !task.completed,
-    updatedAt: new Date().toLocaleString("ja-JP"),
-  };
-
-  try {
-    store.dispatch(updateTask(toggledTask));
-    await updateTaskApi(id, toggledTask);
-
-    return toggledTask;
-  } catch (err) {
-    store.dispatch(updateTask(task));
-    console.error(err.message);
-  }
-}
