@@ -7,12 +7,19 @@ import {
 import Button from "../../ui/Button";
 import { createTask, deleteTask, finishEdit, updateTask } from "./tasksSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useNavigation, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useNavigate,
+  useNavigation,
+  useParams,
+} from "react-router-dom";
 
 // 新規作成または、編集中の場合は編集フォームのUIコンポーネント
 function TaskForm() {
   const { tasks } = useSelector((state) => state.tasks);
-  const { currentUserId } = useSelector((state) => state.users);
+  const { currentUserId, isAuthenticated } = useSelector(
+    (state) => state.users,
+  );
   const navigation = useNavigation();
   const navigate = useNavigate();
   const isSubmitting = navigation.state === "submitting";
@@ -96,6 +103,8 @@ function TaskForm() {
     },
     [editingTask],
   );
+
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   return (
     <form

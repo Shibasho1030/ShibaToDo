@@ -146,7 +146,7 @@ function Tasks() {
           <span className="hidden min-w-10 text-center md:inline-block ">
             期限
           </span>
-          <span className="min-w-27 text-center md:min-w-32">操作</span>
+          <span className="min-w-31 text-center md:min-w-36">操作</span>
         </div>
       </div>
       <ul>
