@@ -13,6 +13,7 @@ import {
   useNavigation,
   useParams,
 } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // 新規作成または、編集中の場合は編集フォームのUIコンポーネント
 function TaskForm() {
@@ -23,8 +24,7 @@ function TaskForm() {
   const navigation = useNavigation();
   const navigate = useNavigate();
   const isSubmitting = navigation.state === "submitting";
-  const idFromParams = useParams().id;
-
+  const idFromParams = useParams().id || null;
   const editingTask = tasks.find((task) => idFromParams === task.id);
   const initialFormData = {
     id: "",
@@ -43,29 +43,40 @@ function TaskForm() {
 
   // console.log(formatDate(new Date().toLocaleString()));
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!formData.title) return;
-    if (idFromParams) {
-      const updatedTask = {
-        ...formData,
-        updatedAt: new Date().toLocaleString("ja-JP"),
-      };
-      dispatch(updateTask(updatedTask));
-      updateTaskApi(idFromParams, updatedTask);
-      navigate("/tasks");
+
+    try {
+      if (idFromParams) {
+        const updatedTask = {
+          ...formData,
+          updatedAt: new Date().toLocaleString("ja-JP"),
+        };
+        dispatch(updateTask(updatedTask));
+        await updateTaskApi(idFromParams, updatedTask);
+        toast.success("タスクを更新しました");
+        navigate("/tasks");
+      }
+      if (!idFromParams) {
+        const newTask = {
+          ...formData,
+          createdAt: new Date().toLocaleString("ja-JP"),
+          updatedAt: new Date().toLocaleString("ja-JP"),
+        };
+        dispatch(createTask(newTask));
+        await createTaskApi(newTask);
+        toast.success("タスクを作成しました");
+        navigate("/tasks");
+      }
+      idFromParams && dispatch(finishEdit());
+    } catch (err) {
+      console.error(err.message);
+      dispatch(deleteTask(formData.id));
+      toast.error(
+        `${idFromParams ? "タスクの更新に失敗しました" : "タスクの作成に失敗しました"}`,
+      );
     }
-    if (!idFromParams) {
-      const updatedTask = {
-        ...formData,
-        createdAt: new Date().toLocaleString("ja-JP"),
-        updatedAt: new Date().toLocaleString("ja-JP"),
-      };
-      dispatch(createTask(updatedTask));
-      createTaskApi(updatedTask);
-      navigate("/tasks");
-    }
-    idFromParams && dispatch(finishEdit());
   }
 
   async function handleDelete() {
@@ -73,33 +84,25 @@ function TaskForm() {
       // console.log("confirm start");
       const confirmed = window.confirm("このタスクを本当に削除しますか？");
       if (!confirmed) return;
-      await deleteTaskApi(idFromParams);
+
       dispatch(deleteTask(idFromParams));
+      await deleteTaskApi(idFromParams);
+      toast.success("タスクを削除しました");
       navigate("/tasks");
     } catch (err) {
+      dispatch(createTaskApi(editingTask));
       console.error(err.message);
+      toast.error("タスクの削除に失敗しました");
     }
   }
 
   useEffect(
     function () {
       if (!editingTask) return;
-      setFormData(
-        {
-          ...editingTask,
-          updatedAt: new Date().toLocaleString("ja-JP"),
-        },
-        // id: editingTask.id,
-        // userId: editingTask.userId,
-        // title: editingTask.title,
-        // description: editingTask.description,
-        // completed: editingTask.completed,
-        // priority: editingTask.priority,
-        // category: editingTask.category,
-        // createdAt: editingTask.createdAt,
-        // updatedAt: editingTask.updatedAt,
-        // dueDate: editingTask.dueDate,
-      );
+      setFormData({
+        ...editingTask,
+        updatedAt: new Date().toLocaleString("ja-JP"),
+      });
     },
     [editingTask],
   );

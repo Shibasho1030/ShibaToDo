@@ -6,6 +6,7 @@ import { FiLogIn } from "react-icons/fi";
 import { FiLogOut } from "react-icons/fi";
 import { FiUserPlus } from "react-icons/fi";
 import { FiBookOpen } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 function Header() {
   const { isAuthenticated } = useSelector((state) => state.users);
@@ -20,11 +21,12 @@ function Header() {
   function handleLogout() {
     dispatch(logout());
     localStorage.removeItem("currentUserId");
+    toast("ログアウトしました");
     navigate("/");
   }
 
   return (
-    <header className="border-b border-[#9DB2BF]/40 bg-[#9DB2BF]/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[#9DB2BF]/40 bg-[#9DB2BF]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
         <div className="flex gap-5">
           <Link

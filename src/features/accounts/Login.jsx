@@ -9,6 +9,7 @@ import Button from "../../ui/Button";
 import { getUsersApi } from "../../services/apiUsers";
 import store from "../../store";
 import { login } from "./accountsSlice";
+import toast from "react-hot-toast";
 
 // ログイン時のフォームコンポーネント
 function Login() {
@@ -69,7 +70,7 @@ function Login() {
                 type="text"
                 name="text"
                 required
-                defaultValue="shiba@example.com"
+                defaultValue="guest@example.com"
                 placeholder="example@example.com / taro"
                 className="w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
               />
@@ -84,7 +85,7 @@ function Login() {
                 type="password"
                 name="password"
                 required
-                defaultValue="shibasho"
+                defaultValue="guestpass"
                 placeholder="••••••••"
                 className="w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30"
               />
@@ -125,39 +126,43 @@ function Login() {
 
 // ログインフォーム送信後処理
 export async function action({ request }) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
+  try {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData);
 
-  const userData = {
-    ...data,
-    remember: data.remember === "on",
-  };
-  // console.log(userData);
+    const userData = {
+      ...data,
+      remember: data.remember === "on",
+    };
+    // console.log(userData);
 
-  // 認証機能
-  const userDataFromApi = await getUsersApi();
-  const passwordCheckedUser = userDataFromApi?.find(
-    (user) => user.password === userData?.password,
-  );
-  if (
-    passwordCheckedUser?.email !== userData?.text &&
-    passwordCheckedUser.name !== userData.text
-  )
-    return { error: "ユーザー名またはパスワードが違います" };
-
-  // ログイン処理
-  if (userData.remember) {
-    localStorage.setItem(
-      "currentUserId",
-      JSON.stringify(passwordCheckedUser.id),
+    // 認証機能
+    const userDataFromApi = await getUsersApi();
+    const passwordCheckedUser = userDataFromApi?.find(
+      (user) => user.password === userData?.password,
     );
-  } else {
-    localStorage.removeItem("currentUserId");
+    if (
+      passwordCheckedUser?.email !== userData?.text &&
+      passwordCheckedUser.name !== userData.text
+    )
+      return { error: "ユーザー名またはパスワードが違います" };
+
+    // ログイン処理
+    if (userData.remember) {
+      localStorage.setItem(
+        "currentUserId",
+        JSON.stringify(passwordCheckedUser.id),
+      );
+    } else {
+      localStorage.removeItem("currentUserId");
+    }
+
+    store.dispatch(login(passwordCheckedUser.id));
+    toast.success(`おかえりなさい ${passwordCheckedUser.name} さん`);
+    return redirect(`/`);
+  } catch (err) {
+    console.error(err.message);
   }
-
-  store.dispatch(login(passwordCheckedUser.id));
-
-  return redirect(`/`);
 }
 
 export default Login;

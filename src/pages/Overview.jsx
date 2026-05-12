@@ -24,7 +24,9 @@ function Overview() {
         <div className="mb-5">
           <h2 className="text-2xl font-bold text-[#27374D]">アプリ概要</h2>
           <p className="mt-2 text-sm leading-7 text-[#526D82]">
-            ログイン後に自分のタスクを確認し、追加・編集・削除・完了管理まで行えるToDoアプリです。
+            ログイン後、自分専用のタスクを確認・追加・編集・削除・完了管理できるタスク管理アプリです。
+            <br />
+            頭の中にあるタスクを書き出すことで、やるべきことを整理し、他の作業に集中しやすくすることを目的としています。
           </p>
         </div>
 
