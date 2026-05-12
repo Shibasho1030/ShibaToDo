@@ -122,16 +122,6 @@ function TaskShow() {
               >
                 優先度: {priority || "未設定"}
               </span>
-
-              {/* <span
-                className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ring-1 ${
-                  category
-                    ? categoryStyle[category]
-                    : "bg-slate-400/10 text-slate-600 ring-slate-400/20"
-                }`}
-              >
-                カテゴリ: {category || "未設定"}
-              </span> */}
             </div>
           </div>
         </div>

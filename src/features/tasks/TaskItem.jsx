@@ -1,8 +1,13 @@
 import { useDispatch } from "react-redux";
-import { deleteTaskApi, updateTaskApi } from "../../services/apiTasks";
+import {
+  createTaskApi,
+  deleteTaskApi,
+  updateTaskApi,
+} from "../../services/apiTasks";
 import { deleteTask, updateTask } from "./tasksSlice";
 import { Link, useFetcher, useNavigate } from "react-router-dom";
 import store from "../../store";
+import toast from "react-hot-toast";
 
 // 単一タスクを表示するためのUIコンポーネント
 function TaskItem({
@@ -48,11 +53,15 @@ function TaskItem({
       // console.log("confirm start");
       const confirmed = window.confirm("このタスクを本当に削除しますか？");
       if (!confirmed) return;
-      await deleteTaskApi(task.id);
+
       dispatch(deleteTask(task.id));
+      await deleteTaskApi(task.id);
+      toast.success("タスクを削除しました");
       navigate("/tasks");
     } catch (err) {
       console.error(err.message);
+      dispatch(createTaskApi(task));
+      toast.error("タスクの削除に失敗しました");
     }
   }
 
@@ -110,7 +119,9 @@ function TaskItem({
           {dueDate ? new Date(dueDate).toLocaleDateString("ja-JP") : ""}
         </span>
 
-        <div className="flex items-center gap-1 lg:opacity-0 transition group-hover:opacity-100">
+        <div
+          className={`flex items-center gap-1 lg:opacity-0 transition ${!draggingId ? "group-hover:opacity-100" : ""}`}
+        >
           <Link
             to={`/tasks/${id}/form`}
             className="rounded-lg px-2 py-1 text-xs font-medium text-stone-500 lg:transition 
@@ -129,6 +140,7 @@ function TaskItem({
 
           <button
             onMouseDown={handleDragMouseDown}
+            onDoubleClick={(e) => e.stopPropagation()}
             type="button"
             aria-label="並べ替え"
             name="sort"

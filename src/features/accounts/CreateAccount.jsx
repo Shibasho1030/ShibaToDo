@@ -8,6 +8,7 @@ import {
 import { createUserApi, getUsersApi } from "../../services/apiUsers";
 import { login } from "./accountsSlice";
 import store from "../../store";
+import toast from "react-hot-toast";
 
 // アカウント作成用UIコンポーネント
 function CreateAccount() {
@@ -70,7 +71,7 @@ function CreateAccount() {
                 type="text"
                 name="name"
                 required
-                placeholder="Shohei"
+                placeholder="Taro"
                 className={`w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30 ${actionData?.field === "name" ? "border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-200" : "border-[#9DB2BF]/50 focus:border-[#526D82] focus:ring-[#9DB2BF]/30"}`}
               />
             </div>
@@ -218,6 +219,7 @@ export async function action({ request }) {
     const data2 = await createUserApi(newAccountObj);
     // console.log(data2);
     store.dispatch(login(data2.id));
+    toast.success("アカウントを作成しました");
     return redirect("/");
   } catch (err) {
     console.error(err.message);

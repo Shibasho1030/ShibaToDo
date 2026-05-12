@@ -88,7 +88,7 @@ function Tasks() {
     }));
     dispatch(setTasks(reorderedTasks));
 
-    // 実装難易度が高いと感じたため、今回は簡易的に並び替え機能を実装
+    // 実装難易度が高いと感じたため、今回は簡略的に並び替え機能を実装
     // const rect = e.currentTarget.getBoundingClientRect();
     // const middleY = rect.top + rect.height / 2;
     // console.log(e.clientX, e.clientY);
@@ -103,8 +103,8 @@ function Tasks() {
   async function handleDrop(e) {
     e.preventDefault();
 
-    // タスク枠内でタスクを話した場合
-    didDrop.current = true;
+    // タスク枠内でタスクを離した場合(UX低下のため削除)
+    // didDrop.current = true;
 
     try {
       //APIでjsonファイルも更新
@@ -116,10 +116,10 @@ function Tasks() {
   }
 
   async function handleDragEnd() {
-    // タスク枠外で話した場合
-    if (!didDrop.current) {
-      dispatch(setTasks(originalTasks.current));
-    }
+    // タスク枠外で離した場合(UX低下のため削除)
+    // if (!didDrop.current) {
+    //   dispatch(setTasks(originalTasks.current));
+    // }
 
     // reset state
     didDrop.current = false;
