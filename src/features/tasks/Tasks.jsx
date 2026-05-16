@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import TaskOperations from "./TasksOperations";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
@@ -130,14 +131,24 @@ function Tasks() {
 
   return (
     <>
-      <LinkButton className="ml-auto flex items-center gap-2 " to="/tasks/form">
+      {/* <LinkButton className="ml-auto flex items-center gap-2 " to="/tasks/form">
         +
-      </LinkButton>
+      </LinkButton> */}
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <TaskOperations />
+
+        <LinkButton
+          className="flex items-center gap-2 self-end sm:self-auto"
+          to="/tasks/form"
+        >
+          +
+        </LinkButton>
+      </div>
 
       <div className="mb-2 flex items-center justify-between px-4 text-xs font-semibold uppercase tracking-wide text-[#526D82] ">
         <div className="flex min-w-0 items-center gap-3">
           <span className="w-5"></span>
-          <span>Task</span>
+          <span>タスク</span>
         </div>
 
         <div className="ml-4 flex shrink-0 items-center gap-2 sm:gap-3">

@@ -15,9 +15,9 @@ function HomeLeft() {
             </p>
 
             <h1 className="mb-5 text-4xl font-bold leading-tight text-[#27374D] md:text-5xl">
-              タスク管理を
+              書き出して
               <span className="block text-[#526D82]">
-                もっとスマートに始めよう
+                今のタスクに集中しよう
               </span>
             </h1>
 
@@ -49,9 +49,9 @@ function HomeLeft() {
             </p>
 
             <h1 className="mb-5 text-4xl font-bold leading-tight text-[#27374D] md:text-5xl">
-              タスク管理を
+              書き出して
               <span className="block text-[#526D82]">
-                もっと分かりやすく、もっと快適に
+                今のタスクに集中しよう
               </span>
             </h1>
 
