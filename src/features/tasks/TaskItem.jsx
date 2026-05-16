@@ -1,13 +1,10 @@
 import { useDispatch } from "react-redux";
-import {
-  createTaskApi,
-  deleteTaskApi,
-  updateTaskApi,
-} from "../../services/apiTasks";
-import { deleteTask, updateTask } from "./tasksSlice";
+import { deleteTaskApi, updateTaskApi } from "../../services/apiTasks";
+import { createTask, deleteTask, updateTask } from "./tasksSlice";
 import { Link, useFetcher, useNavigate } from "react-router-dom";
-import store from "../../store";
 import toast from "react-hot-toast";
+import store from "../../store";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // 単一タスクを表示するためのUIコンポーネント
 function TaskItem({
@@ -21,6 +18,7 @@ function TaskItem({
 }) {
   const fetcher = useFetcher();
   const isUpdating = fetcher.state !== "idle";
+
   const draggedClassName =
     "opacity-40 scale-[0.98] border-dashed bg-slate-100 shadow-none";
   const { id, title, completed, priority, dueDate, order } = task;
@@ -32,8 +30,9 @@ function TaskItem({
     high: "bg-rose-500/10 text-rose-600 ring-rose-500/20",
   };
   const dispatch = useDispatch();
+  // const queryClient = useQueryClient();
 
-  /* fetcher.Formに改良を行ったため不要
+  /* fetcher.Formに改良を行ったため削除
   async function handleToggle(e) {
     e.preventDefault();
     const toggledTask = { ...task, completed: !completed };
@@ -48,6 +47,25 @@ function TaskItem({
   }
   */
 
+  /* ReduxとReactQueryの両立はキャッシュとUIとのズレが起きるため難しそう => 削除
+  const { isLoading: isUpdating, mutate: toggleTaskMutate } = useMutation({
+    mutationFn: async (task) => {
+      const toggledTask = {
+        ...task,
+        completed: !task.completed,
+        updatedAt: new Date().toLocalString("ja-JP"),
+      };
+
+      await updateTaskApi(task.id, toggledTask);
+      return toggledTask;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", task.userId],
+      });
+    },
+  }); */
+
   async function handleDeleteTask() {
     try {
       // console.log("confirm start");
@@ -60,7 +78,7 @@ function TaskItem({
       navigate("/tasks");
     } catch (err) {
       console.error(err.message);
-      dispatch(createTaskApi(task));
+      dispatch(createTask(task));
       toast.error("タスクの削除に失敗しました");
     }
   }
@@ -76,8 +94,9 @@ function TaskItem({
       className={`mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg ${String(id) === String(draggingId) ? draggedClassName : ""}`}
     >
       <div className="flex min-w-0 items-center gap-3">
-        <fetcher.Form method="PATCH" action={`/tasks/${id}/toggle`}>
+        <fetcher.Form method="PATCH" action={`/tasks/${id}/toggleTask`}>
           <button
+            onDoubleClick={(e) => e.stopPropagation()}
             type="submit"
             disabled={isUpdating}
             className={`cursor-pointer flex h-5 min-w-5 items-center justify-center rounded-full border  ${
@@ -139,7 +158,7 @@ function TaskItem({
           </button>
 
           <button
-            onMouseDown={handleDragMouseDown}
+            onMouseDown={() => handleDragMouseDown(id)}
             onDoubleClick={(e) => e.stopPropagation()}
             type="button"
             aria-label="並べ替え"
@@ -156,6 +175,7 @@ function TaskItem({
 
 export default TaskItem;
 
+// 完了トグルボタン用action関数
 export async function action({ params }) {
   const id = params.taskId;
   const task = store

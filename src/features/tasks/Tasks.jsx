@@ -6,14 +6,17 @@ import { useEffect, useRef, useState } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+ feature/updateHome
 import TaskOperations from "./TaskOperations";
+
+ main
 // import { useQuery } from "@tanstack/react-query";
 import Error from "../../ui/Error";
 import Spinner from "../../ui/Spinner";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
-  const didDrop = useRef(false);
+  const latestTasks = useRef(false);
   const canDrag = useRef(false);
   const originalTasks = useRef(null);
   const [draggingId, setDraggingId] = useState(null);
@@ -27,7 +30,21 @@ function Tasks() {
   );
   const { tasks } = useSelector((state) => state.tasks);
 
-  // タスク一覧呼び出し＆ステートに割り当て
+  // ReduxとReactQueryの両立はキャッシュとUIとのズレが起きるため難しそう => 削除
+  // const queryClient = useQueryClient();
+  // const {
+  //   isPending,
+  //   data: tasks,
+  //   error,
+  // } = useQuery({
+  //   queryKey: ["tasks", currentUserId],
+  //   queryFn: () => getTasksApi(currentUserId),
+  //   enabled: isAuthenticated && Boolean(currentUserId),
+  // });
+  // if (isPending) return <Spinner size="lg" />;
+  // if (error) return <Error />;
+
+  // タスク一覧呼び出し＆ステートに割り当て => React Queryに変換
   useEffect(
     function () {
       async function setTasksDataFetch() {
@@ -46,10 +63,12 @@ function Tasks() {
     [dispatch, isAuthenticated, currentUserId],
   );
 
-  // Api取得の際にユーザーのフィルタリングはしているため不要
-  // const filteredTasks = tasks.filter((task) => task.userId === currentUserId);
-
-  if (!isAuthenticated) return <Navigate to="/" replace />;
+  useEffect(
+    function () {
+      latestTasks.current = tasks;
+    },
+    [tasks],
+  );
 
   function handleDragMouseDown() {
     canDrag.current = true;
@@ -61,7 +80,7 @@ function Tasks() {
       return;
     }
 
-    didDrop.current = false;
+    // didDrop.current = false;
     originalTasks.current = tasks;
     setDraggingId(id);
 
@@ -107,30 +126,48 @@ function Tasks() {
   async function handleDrop(e) {
     e.preventDefault();
 
-    // タスク枠内でタスクを離した場合(UX低下のため削除)
     // didDrop.current = true;
 
-    try {
-      //APIでjsonファイルも更新
-      await updateTasksApi(tasks);
-    } catch (err) {
-      console.error(err.message);
-      dispatch(setTasks(originalTasks.current));
-    }
+    // try {
+    //   //APIでjsonファイルも更新
+    //   await updateTasksApi(tasks);
+    // } catch (err) {
+    //   console.error(err.message);
+    //   dispatch(setTasks(originalTasks.current));
+    // }
+
+    // if (document.activeElement instanceof HTMLElement) {
+    //   document.activeElement.blur();
+    // }
+    // document.body.style.cursor = "";
   }
 
   async function handleDragEnd() {
     // タスク枠外で離した場合(UX低下のため削除)
     // if (!didDrop.current) {
-    //   dispatch(setTasks(originalTasks.current));
+    // dispatch(setTasks(originalTasks.current));
     // }
 
+    try {
+      //APIでjsonファイルも更新
+      await updateTasksApi(latestTasks.current);
+    } catch (err) {
+      console.error(err.message);
+      dispatch(setTasks(originalTasks.current));
+    }
+
     // reset state
-    didDrop.current = false;
+    // didDrop.current = false;
     setDraggingId(null);
     originalTasks.current = null;
     canDrag.current = false;
+
+    // if (document.activeElement instanceof HTMLElement) {
+    //   document.activeElement.blur();
+    // }
+    // document.body.style.cursor = "";
   }
+  if (!isAuthenticated) return <Navigate to="/" replace />;
 
   return (
     <>

@@ -62,13 +62,18 @@ function Login() {
                   {actionData.error}
                 </p>
               )}
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="login-text"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 メールアドレス / ユーザー名
               </label>
 
               <input
+                id="login-text"
                 type="text"
                 name="text"
+                autoComplete="email"
                 required
                 defaultValue="guest@example.com"
                 placeholder="example@example.com / taro"
@@ -77,13 +82,18 @@ function Login() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="login-password"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 パスワード
               </label>
 
               <input
+                id="login-password"
                 type="password"
                 name="password"
+                autoComplete="current-password"
                 required
                 defaultValue="guestpass"
                 placeholder="••••••••"
@@ -91,8 +101,12 @@ function Login() {
               />
             </div>
 
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-[#526D82]">
+            <label
+              htmlFor="login-remember"
+              className="flex cursor-pointer items-center gap-2 text-sm text-[#526D82]"
+            >
               <input
+                id="login-remember"
                 type="checkbox"
                 name="remember"
                 className="h-4 w-4 rounded border-[#9DB2BF]"

@@ -53,7 +53,7 @@ const router = createBrowserRouter([
         element: <TaskShow />,
       },
       {
-        path: "/tasks/:taskId/toggle",
+        path: "/tasks/:taskId/toggleTask",
         action: toggleTaskAction,
       },
     ],
