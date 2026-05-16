@@ -6,7 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { setTasks } from "./tasksSlice";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import TaskOperations from "./TasksOperations";
+import TaskOperations from "./TaskOperations";
+// import { useQuery } from "@tanstack/react-query";
+import Error from "../../ui/Error";
+import Spinner from "../../ui/Spinner";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {
