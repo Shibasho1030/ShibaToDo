@@ -9,10 +9,6 @@ import { Navigate } from "react-router-dom";
  feature/updateHome
 import TaskOperations from "./TaskOperations";
 
- main
-// import { useQuery } from "@tanstack/react-query";
-import Error from "../../ui/Error";
-import Spinner from "../../ui/Spinner";
 
 // タスク一覧を表示するUIコンポーネント
 function Tasks() {

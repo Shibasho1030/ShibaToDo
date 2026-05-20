@@ -15,7 +15,7 @@ function TaskOperations() {
         </button>
 
         <button className="rounded-xl px-3 py-1.5 text-xs font-medium text-[#526D82] transition hover:bg-white/80 hover:text-[#27374D]">
-          Active
+          期限切れ
         </button>
       </div>
 
@@ -24,9 +24,9 @@ function TaskOperations() {
           defaultValue="order"
           className="cursor-pointer appearance-none rounded-xl border border-transparent bg-white/70 py-1.5 pl-3 pr-9 text-xs font-medium text-[#27374D] shadow-sm outline-none transition hover:bg-white focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/20"
         >
-          <option value="order">Sort by manual order</option>
-          <option value="dueDate">Sort by due date</option>
-          <option value="priority">Sort by priority</option>
+          <option value="order">カスタム</option>
+          <option value="dueDate">日付順</option>
+          <option value="priority">優先度順</option>
           <option value="createdAt">Sort by created date</option>
           <option value="completed">Sort by incomplete first</option>
         </select>
