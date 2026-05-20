@@ -1,9 +1,9 @@
 {
   "users": [
     {
-      "name": "Shiba",
-      "email": "shiba@example.com",
-      "password": "shibasho",
+      "name": "Guest",
+      "email": "guest@example.com",
+      "password": "guestpass",
       "id": "1"
     },
     {
@@ -19,12 +19,12 @@
       "userId": "1",
       "title": "Todoアプリを作成",
       "description": "タスクUIと状態管理を作成する",
-      "completed": true,
+      "completed": false,
       "priority": "medium",
-      "category": "study",
+      "order": 1,
       "createdAt": "2026-04-17 10:00:00",
       "dueDate": "2026-04-20 23:59:59",
-      "updatedAt": "2026/4/23 22:18:31"
+      "updatedAt": "2026/5/19 9:04:24"
     },
     {
       "id": "2",
@@ -33,10 +33,10 @@
       "description": "脚トレの日",
       "completed": true,
       "priority": "low",
-      "category": "personal",
+      "order": 2,
       "createdAt": "2026-04-18 07:00:00Z",
       "dueDate": "2026-04-18 20:00:00Z",
-      "updatedAt": "2026/4/22 10:04:33"
+      "updatedAt": "2026/5/19 9:04:22"
     },
     {
       "id": "3",
@@ -45,10 +45,10 @@
       "description": "長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題を修正する。長いテキスト入力時のレイアウト崩れ、オーバーフロー、レスポンシブ問題を修正する",
       "completed": false,
       "priority": "high",
-      "category": "other",
+      "order": 3,
       "createdAt": "2026-04-19 11:30:00",
       "dueDate": "2026-04-19 18:00:00",
-      "updatedAt": "2026/4/23 10:59:52"
+      "updatedAt": "2026/5/12 18:50:23"
     },
     {
       "id": "4",
@@ -57,22 +57,22 @@
       "description": "React Routerの動画",
       "completed": false,
       "priority": "",
-      "category": "study",
+      "order": 4,
       "createdAt": "2026-04-18 12:00:00",
-      "dueDate": "2026-04-21 23:59:59",
-      "updatedAt": "2026/4/22 10:04:39"
+      "dueDate": "2026-05-19T23:59",
+      "updatedAt": "2026/5/19 9:09:22"
     },
     {
       "id": "5",
       "userId": "1",
       "title": "課題を提出する",
       "description": "React課題提出",
-      "completed": false,
+      "completed": true,
       "priority": "high",
-      "category": "",
+      "order": 5,
       "createdAt": "2026-04-15 10:00:00",
-      "dueDate": "2026-04-16 23:59:59",
-      "updatedAt": "2026/4/22 21:34:32"
+      "dueDate": "2026-05-19T23:59",
+      "updatedAt": "2026/5/19 9:08:52"
     },
     {
       "id": "6",
@@ -81,10 +81,10 @@
       "description": "部屋の掃除",
       "completed": false,
       "priority": "low",
-      "category": "personal",
+      "order": 6,
       "createdAt": "2026-04-18 08:00:00",
       "dueDate": "",
-      "updatedAt": "2026/4/23 22:18:58"
+      "updatedAt": "2026/5/12 22:00:52"
     },
     {
       "id": "7",
@@ -93,10 +93,154 @@
       "description": "掃除",
       "completed": false,
       "priority": "high",
-      "category": "personal",
+      "order": 1,
       "createdAt": "2026-04-18 08:00:00",
       "dueDate": "2026-04-19 11:30:00",
-      "updatedAt": "2026/4/23 9:55:09"
+      "updatedAt": "2026/5/12 22:28:33"
+    },
+    {
+      "id": "94STdWu6Sg8",
+      "userId": "2",
+      "title": "6345",
+      "description": "",
+      "completed": true,
+      "priority": "",
+      "createdAt": "2026/5/8 20:55:58",
+      "dueDate": "",
+      "updatedAt": "2026/5/12 21:13:00",
+      "order": 2
+    },
+    {
+      "id": "hFp9QF0aN98",
+      "userId": "1",
+      "title": "fdsafsda",
+      "description": "",
+      "completed": false,
+      "priority": "",
+      "createdAt": "2026/5/12 20:59:32",
+      "dueDate": "",
+      "updatedAt": "2026/5/12 20:59:32",
+      "order": 7
+    },
+    {
+      "id": "8",
+      "userId": "1",
+      "title": "React Queryの復習",
+      "description": "useQueryとuseMutationの違いを整理する",
+      "completed": false,
+      "priority": "high",
+      "order": 8,
+      "createdAt": "2026/5/13 09:15:00",
+      "dueDate": "2026/5/17 23:59:59",
+      "updatedAt": "2026/5/13 09:15:00"
+    },
+    {
+      "id": "9",
+      "userId": "1",
+      "title": "READMEを修正する",
+      "description": "制作背景と工夫した点を分かりやすく整理する",
+      "completed": false,
+      "priority": "medium",
+      "order": 9,
+      "createdAt": "2026/5/13 10:30:00",
+      "dueDate": "2026/5/18 23:59:59",
+      "updatedAt": "2026/5/13 10:30:00"
+    },
+    {
+      "id": "10",
+      "userId": "1",
+      "title": "ログイン処理を確認する",
+      "description": "別ユーザーでログインした時に前のユーザーのタスクが表示されないか確認する",
+      "completed": true,
+      "priority": "high",
+      "order": 10,
+      "createdAt": "2026/5/13 13:00:00",
+      "dueDate": "2026/5/14 23:59:59",
+      "updatedAt": "2026/5/14 07:45:12"
+    },
+    {
+      "id": "11",
+      "userId": "1",
+      "title": "ドラッグ＆ドロップの動作確認",
+      "description": "タスク枠外でドロップした場合でも並び替えが正しく保存されるか確認する",
+      "completed": false,
+      "priority": "medium",
+      "order": 11,
+      "createdAt": "2026/5/14 08:20:00",
+      "dueDate": "",
+      "updatedAt": "2026/5/14 08:20:00"
+    },
+    {
+      "id": "12",
+      "userId": "1",
+      "title": "面談用の自己紹介を練習する",
+      "description": "Web開発を選んだ理由と前職経験のつながりを説明できるようにする",
+      "completed": false,
+      "priority": "high",
+      "order": 12,
+      "createdAt": "2026/5/14 19:00:00",
+      "dueDate": "2026/5/18 19:00:00",
+      "updatedAt": "2026/5/14 19:00:00"
+    },
+    {
+      "id": "13",
+      "userId": "1",
+      "title": "買い物に行く",
+      "description": "卵、牛乳、トマトを買う",
+      "completed": false,
+      "priority": "low",
+      "order": 13,
+      "createdAt": "2026/5/13 17:30:00",
+      "dueDate": "2026/5/15 20:00:00",
+      "updatedAt": "2026/5/13 17:30:00"
+    },
+    {
+      "id": "14",
+      "userId": "1",
+      "title": "メールを確認する",
+      "description": "面談日程と返信が必要なメールを確認する",
+      "completed": true,
+      "priority": "medium",
+      "order": 14,
+      "createdAt": "2026/5/14 06:40:00",
+      "dueDate": "2026/5/14 12:00:00",
+      "updatedAt": "2026/5/14 11:20:33"
+    },
+    {
+      "id": "15",
+      "userId": "1",
+      "title": "Next.jsの学習を進める",
+      "description": "Server ComponentsとClient Componentsの違いを整理する",
+      "completed": false,
+      "priority": "high",
+      "order": 15,
+      "createdAt": "2026/5/15 09:00:00",
+      "dueDate": "2026/5/20 23:59:59",
+      "updatedAt": "2026/5/15 09:00:00"
+    },
+    {
+      "id": "16",
+      "userId": "1",
+      "title": "ポートフォリオのUIを見直す",
+      "description": "余白、色、ボタンの見た目を整えて使いやすくする",
+      "completed": false,
+      "priority": "medium",
+      "order": 16,
+      "createdAt": "2026/5/15 14:10:00",
+      "dueDate": "",
+      "updatedAt": "2026/5/15 14:10:00"
+    },
+    {
+      "id": "17",
+      "userId": "1",
+      "title": "休憩する",
+      "description": "集中力が落ちてきたら散歩してリセットする",
+      "completed": false,
+      "priority": "low",
+      "order": 17,
+      "createdAt": "2026/5/16 15:30:00",
+      "dueDate": "",
+      "updatedAt": "2026/5/16 15:30:00"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
