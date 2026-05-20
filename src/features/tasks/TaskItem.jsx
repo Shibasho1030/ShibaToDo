@@ -69,10 +69,10 @@ function TaskItem({
     <li
       draggable
       onDragStart={(e) => handleDragStart(e, id)}
-      onDragEnd={handleDragEnd}
-      onDrop={(e) => handleDrop(e, order)}
-      onDoubleClick={() => navigate(`/tasks/${id}`)}
       onDragOver={(e) => handleDragOver(e, order)}
+      onDrop={(e) => handleDrop(e, order)}
+      onDragEnd={handleDragEnd}
+      onDoubleClick={() => navigate(`/tasks/${id}`)}
       className={`mb-0.5 group flex items-center justify-between rounded-3xl border border-white/40 bg-white/70 px-4 py-3 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg ${String(id) === String(draggingId) ? draggedClassName : ""}`}
     >
       <div className="flex min-w-0 items-center gap-3">
