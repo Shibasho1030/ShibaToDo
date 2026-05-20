@@ -58,7 +58,10 @@ function CreateAccount() {
 
           <Form method="post" className="space-y-5">
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="createAccount-text"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 ユーザー名
               </label>
               {actionData?.field === "name" && (
@@ -68,8 +71,10 @@ function CreateAccount() {
               )}
 
               <input
+                id="createAccount-text"
                 type="text"
                 name="name"
+                autoComplete="username"
                 required
                 placeholder="Taro"
                 className={`w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30 ${actionData?.field === "name" ? "border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-200" : "border-[#9DB2BF]/50 focus:border-[#526D82] focus:ring-[#9DB2BF]/30"}`}
@@ -77,7 +82,10 @@ function CreateAccount() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="createAccount-email"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 メールアドレス
               </label>
               {actionData?.field === "email" && (
@@ -87,8 +95,10 @@ function CreateAccount() {
               )}
 
               <input
+                id="createAccount-email"
                 type="email"
                 name="email"
+                autoComplete="email"
                 required
                 placeholder="example@email.com"
                 className={`w-full rounded-2xl border border-[#9DB2BF]/50 bg-white px-4 py-3 text-[#27374D] outline-none transition focus:border-[#526D82] focus:ring-4 focus:ring-[#9DB2BF]/30 ${actionData?.field === "email" ? "border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-200" : "border-[#9DB2BF]/50 focus:border-[#526D82] focus:ring-[#9DB2BF]/30"}`}
@@ -96,7 +106,10 @@ function CreateAccount() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="createAccount-password"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 パスワード
               </label>
               {actionData?.field === "password" && (
@@ -106,8 +119,10 @@ function CreateAccount() {
               )}
 
               <input
+                id="createAccount-password"
                 type="password"
                 name="password"
+                autoComplete="new-password"
                 required
                 minLength="6"
                 placeholder="6文字以上で入力"
@@ -116,13 +131,18 @@ function CreateAccount() {
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-semibold text-[#27374D]">
+              <label
+                htmlFor="createAccount-passwordCheck"
+                className="mb-2 block text-sm font-semibold text-[#27374D]"
+              >
                 パスワード確認
               </label>
 
               <input
+                id="createAccount-passwordCheck"
                 type="password"
                 name="confirmPassword"
+                autoComplete="new-password"
                 required
                 minLength="6"
                 placeholder="もう一度入力してください"
@@ -130,8 +150,12 @@ function CreateAccount() {
               />
             </div>
 
-            <label className="flex cursor-pointer items-start gap-2 text-sm leading-6 text-[#526D82]">
+            <label
+              htmlFor="createAccount-checkbox"
+              className="flex cursor-pointer items-start gap-2 text-sm leading-6 text-[#526D82]"
+            >
               <input
+                id="createAccount-checkbox"
                 type="checkbox"
                 name="agree"
                 required

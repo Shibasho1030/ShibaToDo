@@ -14,6 +14,7 @@ import {
   useParams,
 } from "react-router-dom";
 import toast from "react-hot-toast";
+// import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // 新規作成または、編集中の場合は編集フォームのUIコンポーネント
 function TaskForm() {
@@ -40,6 +41,11 @@ function TaskForm() {
   const [formData, setFormData] = useState(initialFormData);
 
   const dispatch = useDispatch();
+  // const queryClient = useQueryClient();
+  // const { isLoading: isUpdating, mutate: updateMutate } = useMutation({
+  //   mutationFn: (id, task) => updateTaskApi(id, task),
+  //   onSuccess: () => {},
+  // });
 
   // console.log(formatDate(new Date().toLocaleString()));
 
@@ -116,10 +122,14 @@ function TaskForm() {
     >
       <div className="flex flex-col gap-4">
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#27374D]">
+          <label
+            htmlFor="taskForm-title"
+            className="mb-2 block text-sm font-medium text-[#27374D]"
+          >
             タイトル
           </label>
           <input
+            id="taskForm-title"
             required
             type="text"
             placeholder="例: Reactの課題を進める"
@@ -132,10 +142,14 @@ function TaskForm() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-[#27374D]">
+          <label
+            htmlFor="taskForm-description"
+            className="mb-2 block text-sm font-medium text-[#27374D]"
+          >
             説明
           </label>
           <textarea
+            id="taskForm-description"
             placeholder="例: Reduxの処理まで実装する"
             value={formData.description}
             onChange={(e) =>
@@ -148,10 +162,14 @@ function TaskForm() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-[#27374D]">
+            <label
+              htmlFor="taskForm-priority"
+              className="mb-2 block text-sm font-medium text-[#27374D]"
+            >
               優先度
             </label>
             <select
+              id="taskForm-priority"
               value={formData.priority}
               onChange={(e) =>
                 setFormData({ ...formData, priority: e.target.value })
@@ -166,10 +184,14 @@ function TaskForm() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-[#27374D]">
+            <label
+              htmlFor="taskForm-datetime"
+              className="mb-2 block text-sm font-medium text-[#27374D]"
+            >
               期限
             </label>
             <input
+              id="taskForm-datetime"
               type="datetime-local"
               value={formData.dueDate ? formData.dueDate.slice(0, 16) : ""}
               onChange={(e) =>
@@ -183,10 +205,14 @@ function TaskForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           {idFromParams && (
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#27374D]">
+              <label
+                htmlFor="taskForm-status"
+                className="mb-2 block text-sm font-medium text-[#27374D]"
+              >
                 ステータス
               </label>
               <select
+                id="taskForm-status"
                 value={String(formData.completed)}
                 onChange={(e) =>
                   setFormData({

@@ -1,39 +1,56 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getTasksApi } from "../services/apiTasks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HomeTaskItem from "../features/tasks/HomeTaskItem";
+// import { useQuery } from "@tanstack/react-query";
+import { setTasks } from "../features/tasks/tasksSlice";
 
 function HomeRightLogin() {
   const { tasks } = useSelector((state) => state.tasks);
-  const [allTasks, setAllTasks] = useState(tasks ?? null);
   const { currentUserId } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  // ReduxとReactQueryの両立はキャッシュとUIとのズレが起きるため難しそう => グローバルステート管理はReduxのみにする
+  // const {
+  //   isPending,
+  //   data: tasksData,
+  //   error,
+  // } = useQuery({
+  //   queryKey: ["tasks", currentUserId],
+  //   queryFn: () => getTasksApi(currentUserId),
+  //   enabled: isAuthenticated && Boolean(currentUserId),
+  // });
+  // if (isPending) return <Spinner size="lg" />;
+  // if (error) return <Error />;
 
   // APIでタスク一覧を取得
   useEffect(
     function () {
-      if (tasks.length) return;
+      if (!currentUserId) return;
+
       async function fetchGetTask() {
         try {
-          const tasksFromApi = await getTasksApi();
+          const tasksFromApi = await getTasksApi(currentUserId);
           // console.log(tasksFromApi);
-          setAllTasks(tasksFromApi);
+          // setAllTasks(tasksFromApi);
+          dispatch(setTasks(tasksFromApi));
         } catch (err) {
           console.error(err.message);
         }
       }
       fetchGetTask();
     },
-    [tasks],
+    [tasks, dispatch, currentUserId],
   );
 
-  const filteredTasks = allTasks?.filter(
-    (task) => currentUserId === task.userId,
-  );
+  // const filteredTasks = allTasks?.filter(
+  //   (task) => currentUserId === task.userId,
+  // );
   // console.log(allTasks);
   // console.log(filteredTasks);
 
-  // 今日のタスクを表示するための処理
-  const sortedByDueTasks = filteredTasks
+  // 今日のタスクを表示するための並び替え処理
+  const sortedByDueTasks = tasks
     ?.filter((task) => task.completed !== "true")
     .toSorted((a, b) => {
       const dueTimeA = new Date(a.dueDate).getTime();
@@ -53,12 +70,9 @@ function HomeRightLogin() {
 
   // 残りタスク数、未完了タスク数、優先タスク数、表示のための処理
   // console.log(allTasks);
-  const tasksNum = filteredTasks?.length;
-  const uncompletedNum = filteredTasks?.reduce(
-    (num, task) => num + !task.completed,
-    0,
-  );
-  const highPriorityNum = filteredTasks?.reduce(
+  const tasksNum = tasks?.length;
+  const uncompletedNum = tasks?.reduce((num, task) => num + !task.completed, 0);
+  const highPriorityNum = tasks?.reduce(
     (num, task) => num + (task.priority === "high"),
     0,
   );
